@@ -118,22 +118,44 @@ const kam = getTeam().find((person) => person.role.includes('KAM')) ?? null;
     </div>
   </section>
 
-  <script>
+  <script define:vars={{ whatsapp }}>
     const form = document.querySelector('#contact-form');
     const status = document.querySelector('#form-status');
+
+    const show = (kind, html) => {
+      status.classList.remove('hidden', 'status-ok', 'status-err');
+      status.classList.add(kind);
+      status.innerHTML = html;
+    };
+
     form?.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form)))
-      });
-      status.classList.remove('hidden', 'status-ok', 'status-err');
-      status.classList.add(response.ok ? 'status-ok' : 'status-err');
-      status.textContent = response.ok
-        ? 'Solicitud enviada correctamente. Te contactaremos a la brevedad.'
-        : 'No fue posible enviar la solicitud. Intenta nuevamente.';
-      if (response.ok) form.reset();
+      const payload = Object.fromEntries(new FormData(form));
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (response.ok) {
+          show('status-ok', 'Solicitud enviada correctamente. Te contactaremos a la brevedad.');
+          form.reset();
+          return;
+        }
+        // 404 significa que esta copia del sitio se publicó sin backend.
+        if (response.status === 404) throw new Error('sin-backend');
+        show('status-err', 'No fue posible enviar la solicitud. Intenta nuevamente.');
+      } catch {
+        const texto = encodeURIComponent(
+          `Hola, soy ${payload.full_name || ''} de ${payload.company || ''}. ` +
+          `Me interesa: ${payload.interest_area || ''}. ${payload.message || ''}`
+        );
+        const enlace = whatsapp && whatsapp !== 'https://wa.me/' ? `${whatsapp}?text=${texto}` : whatsapp;
+        show('status-err',
+          'El envío en línea no está disponible en este momento. ' +
+          `<a href="${enlace}" target="_blank" rel="noreferrer"><strong>Escríbenos por WhatsApp</strong></a> ` +
+          'y te atendemos de inmediato.');
+      }
     });
   </script>
 </BaseLayout>
