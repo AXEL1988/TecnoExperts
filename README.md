@@ -27,6 +27,27 @@ npm run build
 npm start
 ```
 
+## Publicación en GitHub Pages
+
+El sitio público está publicado en <https://axel1988.github.io/TecnoExperts/> y se
+actualiza solo en cada push a `main` (flujo `.github/workflows/deploy.yml`).
+
+```bash
+npm run build:pages   # genera dist/ tal como queda publicado
+```
+
+**Pages no ejecuta Node**, así que esa copia es únicamente el sitio público: el panel
+administrativo, el inicio de sesión y las rutas de API no existen ahí. El formulario de
+contacto lo detecta y ofrece continuar por WhatsApp con el mensaje ya redactado.
+
+El contenido publicado es el que generan las semillas de `src/lib/db.ts`, porque la base
+de datos no se versiona. Lo que se edite desde el panel en local **no llega a Pages**: para
+que un cambio de contenido salga publicado hay que llevarlo a las semillas y hacer push.
+
+Para tener el panel funcionando hace falta un host que ejecute Node con disco persistente
+(Render de pago, Fly.io o el hosting del cliente). En ese caso se usa `npm run build` y
+`npm start`, con `DB_PATH` apuntando al disco persistente.
+
 ## Administrador inicial
 
 Usuario: `admin`
