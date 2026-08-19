@@ -1,0 +1,5 @@
+---
+import { getUserFromToken } from '../../lib/auth';
+const user = getUserFromToken(Astro.cookies.get('te_session')?.value);
+return Astro.redirect(user ? '/admin/services' : '/admin/login');
+---

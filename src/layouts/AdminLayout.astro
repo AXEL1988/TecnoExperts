@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+import { entities } from '../lib/entities';
+
+interface Props {
+  title: string;
+  active: string;
+}
+
+const { title, active } = Astro.props;
+const links = [
+  ...Object.values(entities).map((entity) => ({ key: entity.key, label: entity.label, href: `/admin/${entity.key}` })),
+  { key: 'contenido', label: 'Textos del sitio', href: '/admin/contenido' }
+];
+---
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Admin Tecno Experts</title>
+  </head>
+  <body class="admin-shell">
+    <header class="admin-header">
+      <div class="container">
+        <div class="brand">
+          <span class="brand-mark">TE</span>
+          <span><strong>TECNO</strong> <small>EXPERTS</small></span>
+        </div>
+        <form method="post" action="/api/auth/logout"><button class="icon-btn">Cerrar sesión</button></form>
+      </div>
+    </header>
+    <div class="container admin-layout">
+      <aside class="admin-sidebar">
+        {links.map((link) => (
+          <a class={link.key === active ? 'active' : ''} href={link.href}>{link.label}</a>
+        ))}
+        <a href="/">Ver sitio</a>
+      </aside>
+      <section class="admin-content"><slot /></section>
+    </div>
+  </body>
+</html>

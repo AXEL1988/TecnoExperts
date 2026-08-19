@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getPartners, getSetting, getTeam } from '../lib/db';
+const team = getTeam();
+const partners = getPartners();
+const isImage = (value?: string | null) => Boolean(value && value.includes('/'));
+---
+<BaseLayout title="Nosotros | Tecno Experts"
+            description="Transformamos la tecnología en una ventaja medible y en resiliencia real para tu empresa.">
+  <section class="hero">
+    <div class="hero-media">
+      <img src="/img/equipo/equipo-tecno-experts.webp" alt="Equipo técnico de Tecno Experts"
+           width="1600" height="734" fetchpriority="high" />
+    </div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="kicker">Sobre Tecno Experts</span>
+        <h1>Expertos que resuelven, aliados <span class="accent">que permanecen.</span></h1>
+        <p class="lead">Transformamos la tecnología en una ventaja medible y en resiliencia real para tu empresa.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Nuestra misión y visión</span>
+      <div class="grid-2">
+        <article class="card value-card">
+          <span class="icon-tile icon-tile-solid icon-tile-round"><Icon name="target" size={30} /></span>
+          <div>
+            <h2>Misión</h2>
+            <div class="rule"></div>
+            <p>{getSetting('mission')}</p>
+          </div>
+        </article>
+        <article class="card value-card">
+          <span class="icon-tile icon-tile-solid icon-tile-round"><Icon name="flag-mountain" size={30} /></span>
+          <div>
+            <h2>Visión 2028</h2>
+            <div class="rule"></div>
+            <p>{getSetting('vision')}</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-soft">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Nuestro equipo técnico</span>
+        <h2>Conoce al equipo que protege tu operación.</h2>
+        <p class="lead">Detrás de cada servidor en línea, hay un especialista de Tecno Experts.</p>
+      </div>
+      <div class="grid-4">
+        {team.map((person) => (
+          <article class="card team-card">
+            {person.image_url && (
+              <div class="team-photo-wrap">
+                <img class="team-photo" src={person.image_url} alt={person.name} loading="lazy" />
+              </div>
+            )}
+            <div class="team-body">
+              <h3>{person.name}</h3>
+              <div class="role">{person.role}</div>
+              <p>{person.description}</p>
+              <div class="team-cert">
+                {isImage(person.certification_logo)
+                  ? <img src={person.certification_logo} alt="" loading="lazy" />
+                  : person.certification_logo && <Icon name={person.certification_logo} size={38} stroke={1.5} />}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Certificaciones y partners</span>
+      <div class="card partner-inner" style="margin-top:6px;">
+        <div class="partner-logos" style="border-left:0;padding-left:0;">
+          {partners.map((partner) => (
+            partner.image_url
+              ? <img src={partner.image_url} alt={partner.name} loading="lazy" />
+              : <span>{partner.name}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="cta-banner">
+        <div>
+          <h2>Hablemos sobre <span style="color:#7FB0F5">tu próximo proyecto.</span></h2>
+          <p>Estamos listos para ayudarte a llevar tu infraestructura al siguiente nivel.</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href="/contacto">
+              Hablemos sobre tu próximo proyecto <Icon name="arrow-right" size={16} stroke={2} />
+            </a>
+          </div>
+        </div>
+        <div class="cta-visual">
+          <img src="/img/hero/seguridad-banner.webp" alt="" width="800" height="366" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

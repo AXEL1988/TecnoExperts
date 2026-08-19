@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getCases } from '../lib/db';
+const cases = getCases();
+---
+<BaseLayout title="Casos de éxito | Tecno Experts"
+            description="Casos reales de empresas ecuatorianas que transformaron sus crisis en resiliencia.">
+  <section class="hero">
+    <div class="hero-media">
+      <img src="/img/hero/datacenter-pasillo.webp" alt="" width="1600" height="651" />
+    </div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="kicker">Casos de éxito</span>
+        <h1>Los resultados hablan por nuestros <span class="accent">ingenieros.</span></h1>
+        <div class="rule"></div>
+        <p class="lead">Casos reales de empresas ecuatorianas que transformaron sus crisis en resiliencia.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {cases.map((item, index) => (
+        <article class="card case-row">
+          <div class="case-media">
+            {item.image_url && <img src={item.image_url} alt={item.sector} width="1200" height="800" loading="lazy" />}
+            <span class="case-badge">{String(index + 1).padStart(2, '0')}</span>
+            <span class="case-icon"><Icon name={item.icon_name ?? 'building'} size={26} /></span>
+          </div>
+          <div class="case-title">
+            <h2>{item.title}</h2>
+            <div class="rule"></div>
+          </div>
+          <div class="case-steps">
+            <div class="case-step">
+              <span class="step-icon step-problem"><Icon name="alert" size={20} /></span>
+              <div><strong>Problema:</strong><p>{item.problem}</p></div>
+            </div>
+            <div class="case-step">
+              <span class="step-icon step-solution"><Icon name="gear" size={20} /></span>
+              <div><strong>Solución:</strong><p>{item.solution}</p></div>
+            </div>
+            <div class="case-step">
+              <span class="step-icon step-result"><Icon name="check-circle" size={20} /></span>
+              <div><strong>Resultado:</strong><p>{item.result}</p></div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="cta-banner">
+        <div>
+          <h2>Convierte tu infraestructura en tu mayor <span style="color:#7FB0F5">ventaja competitiva.</span></h2>
+          <p>Hablemos de cómo podemos ayudarte a garantizar la continuidad, seguridad y rendimiento de tu operación.</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href="/contacto">
+              Asegura tu empresa hoy <Icon name="arrow-right" size={16} stroke={2} />
+            </a>
+          </div>
+        </div>
+        <div class="cta-visual">
+          <img src="/img/hero/seguridad-banner.webp" alt="" width="800" height="366" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

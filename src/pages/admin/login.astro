@@ -1,0 +1,35 @@
+---
+import '../../styles/global.css';
+import { getUserFromToken } from '../../lib/auth';
+
+if (getUserFromToken(Astro.cookies.get('te_session')?.value)) return Astro.redirect('/admin');
+const error = Astro.url.searchParams.get('error');
+---
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ingresar | Admin Tecno Experts</title>
+  </head>
+  <body>
+    <div class="login-page">
+      <form class="login-card" method="post" action="/api/auth/login">
+        <div class="brand">
+          <span class="brand-mark">TE</span>
+          <span><strong>TECNO</strong> <small>EXPERTS</small></span>
+        </div>
+        <h1 class="admin-title login-title">Panel de administración</h1>
+        {error && <div class="alert">Usuario o contraseña incorrectos.</div>}
+        <div class="field">
+          <label for="username">Usuario</label>
+          <input id="username" name="username" autocomplete="username" required />
+        </div>
+        <div class="field field-spaced">
+          <label for="password">Contraseña</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+        </div>
+        <button class="btn btn-primary form-submit btn-block">Ingresar</button>
+      </form>
+    </div>
+  </body>
+</html>

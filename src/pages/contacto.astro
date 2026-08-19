@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getSetting, getTeam } from '../lib/db';
+const whatsapp = getSetting('whatsapp_url');
+const email = getSetting('company_email');
+/* La KAM del equipo encabeza la atención inmediata, como en la maqueta. */
+const kam = getTeam().find((person) => person.role.includes('KAM')) ?? null;
+---
+<BaseLayout title="Contacto | Tecno Experts"
+            description="Solicita un diagnóstico, pide una cotización o resuelve una duda urgente.">
+  <section class="hero">
+    <div class="hero-media">
+      <img src="/img/equipo/irene-sarabia.webp" alt="" width="560" height="770" fetchpriority="high" />
+    </div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <div class="rule"></div>
+        <h1>Hablemos de tu <span class="accent">infraestructura.</span></h1>
+        <p class="lead">Solicita un diagnóstico, pide una cotización o resuelve una duda urgente.</p>
+        <div class="hero-badges">
+          <div class="hero-badge">
+            <span class="icon-tile"><Icon name="shield-check" size={21} /></span>
+            <span>Respuesta rápida<br />y personalizada</span>
+          </div>
+          <div class="hero-badge">
+            <span class="icon-tile"><Icon name="users" size={21} /></span>
+            <span>Ingenieros<br />especializados</span>
+          </div>
+          <div class="hero-badge">
+            <span class="icon-tile"><Icon name="cloud-lock" size={21} /></span>
+            <span>Confidencialidad<br />garantizada</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container contact-grid">
+      <form id="contact-form" class="card form-card">
+        <div class="form-head">
+          <span class="icon-tile icon-tile-solid"><Icon name="doc" size={26} /></span>
+          <div>
+            <h2>Envíanos tu solicitud</h2>
+            <p>Completa el formulario y nuestro equipo te contactará a la brevedad.</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="full_name">Nombre Completo <span class="req">*</span></label>
+            <input id="full_name" name="full_name" placeholder="Escribe tu nombre completo" required />
+          </div>
+          <div class="field">
+            <label for="company">Empresa <span class="req">*</span></label>
+            <input id="company" name="company" placeholder="Nombre de tu empresa" required />
+          </div>
+          <div class="field">
+            <label for="email">Correo Corporativo <span class="req">*</span></label>
+            <input id="email" name="email" type="email" placeholder="correo@empresa.com" required />
+          </div>
+          <div class="field">
+            <label for="interest_area">¿Qué área te interesa? <span class="req">*</span></label>
+            <select id="interest_area" name="interest_area" required>
+              <option value="">Selecciona una opción</option>
+              <option>Virtualización VMware</option>
+              <option>Backup y Recuperación</option>
+              <option>Hardware Corporativo</option>
+              <option>DRaaS, DRP e ISO 27001</option>
+              <option>Ciberseguridad</option>
+              <option>Otros</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">Mensaje <span class="req">*</span></label>
+            <textarea id="message" name="message" placeholder="Cuéntanos cómo podemos ayudarte..." required></textarea>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" type="submit" style="margin-top:24px;">
+          Enviar Solicitud <Icon name="arrow-right" size={17} stroke={2} />
+        </button>
+        <p class="form-note">
+          <Icon name="shield" size={17} />
+          <span>Tu información está segura con nosotros. No compartimos tus datos con terceros.</span>
+        </p>
+        <p id="form-status" class="status-msg hidden"></p>
+      </form>
+
+      <aside class="contact-aside">
+        <div class="aside-head">
+          <span class="icon-tile" style="background:var(--green);color:#fff;"><Icon name="whatsapp" size={26} /></span>
+          <h2>¿Prefieres atención inmediata para un proyecto urgente?</h2>
+        </div>
+        {kam && (
+          <div class="kam-card">
+            <p>Habla directamente con {kam.name}, nuestra {kam.role}.</p>
+            {kam.image_url && <img class="kam-photo" src={kam.image_url} alt={kam.name} loading="lazy" />}
+            <h3>{kam.name}</h3>
+            <div class="role">{kam.role}</div>
+            <p>{kam.description}</p>
+          </div>
+        )}
+        <a class="btn btn-whatsapp btn-block btn-lg" href={whatsapp} target="_blank" rel="noreferrer" style="margin-top:20px;">
+          <Icon name="whatsapp" size={20} /> Escribir a {kam ? kam.name.split(' ')[0] : 'un asesor'} ahora
+          <Icon name="arrow-right" size={17} stroke={2} class="arrow" />
+        </a>
+        <div class="contact-lines">
+          <div class="contact-line">
+            <Icon name="mail" size={22} />
+            <div><strong>{email}</strong><span>Respuesta rápida garantizada.</span></div>
+          </div>
+          <div class="contact-line">
+            <Icon name="shield-check" size={22} />
+            <div><strong>Atención confidencial</strong><span>y segura.</span></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <script>
+    const form = document.querySelector('#contact-form');
+    const status = document.querySelector('#form-status');
+    form?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+      });
+      status.classList.remove('hidden', 'status-ok', 'status-err');
+      status.classList.add(response.ok ? 'status-ok' : 'status-err');
+      status.textContent = response.ok
+        ? 'Solicitud enviada correctamente. Te contactaremos a la brevedad.'
+        : 'No fue posible enviar la solicitud. Intenta nuevamente.';
+      if (response.ok) form.reset();
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,109 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getUserFromToken } from '../../lib/auth';
+import { db } from '../../lib/db';
+import { getEntity } from '../../lib/entities';
+
+if (!getUserFromToken(Astro.cookies.get('te_session')?.value)) return Astro.redirect('/admin/login');
+
+const entity = getEntity(Astro.params.entity);
+if (!entity) return new Response('Not Found', { status: 404 });
+
+const rows = db.prepare(`SELECT * FROM ${entity.table} ORDER BY display_order, id`).all();
+const contentFields = entity.fields.filter((field) => !['display_order', 'is_active'].includes(field.name));
+const [primary, secondary] = contentFields;
+---
+<AdminLayout title={entity.label} active={entity.key}>
+  <div class="admin-card">
+    <div class="admin-toolbar">
+      <div>
+        <div class="card-number">Contenido</div>
+        <h1 class="admin-title">{entity.label}</h1>
+        <p>{entity.description}</p>
+      </div>
+      <button id="new-entity" class="btn btn-primary">+ Nuevo {entity.singular}</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Orden</th>
+            <th>{primary.label}</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="entity-body">
+          {rows.map((row: any) => (
+            <tr data-id={row.id}>
+              <td>{row.display_order}</td>
+              <td>
+                <strong>{row[primary.name]}</strong>
+                {secondary && <><br /><small>{row[secondary.name]}</small></>}
+              </td>
+              <td>{row.is_active ? 'Activo' : 'Inactivo'}</td>
+              <td>
+                <div class="table-actions">
+                  <button class="icon-btn edit-btn">Editar</button>
+                  <button class="icon-btn delete-btn">Eliminar</button>
+                </div>
+              </td>
+            </tr>
+          ))}
+          {rows.length === 0 && (
+            <tr><td colspan="4">Todavía no hay registros.</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="editor" class="admin-card hidden">
+    <div class="admin-toolbar">
+      <div>
+        <div class="card-number">Editor</div>
+        <h2 id="editor-title">Nuevo {entity.singular}</h2>
+      </div>
+      <button id="cancel-edit" class="icon-btn">Cancelar</button>
+    </div>
+    <form
+      id="entity-form"
+      data-entity={entity.key}
+      data-new-label={`Nuevo ${entity.singular}`}
+      data-edit-label={`Editar ${entity.singular}`}
+      data-delete-label={`¿Eliminar este ${entity.singular}?`}
+    >
+      <input type="hidden" id="entity-id" />
+      <div class="form-grid">
+        {entity.fields.map((field) => (
+          <div class={`field ${field.full ? 'full' : ''}`}>
+            <label for={field.name}>{field.label}{field.required && ' *'}</label>
+            {field.type === 'textarea' ? (
+              <textarea id={field.name} data-field={field.name} data-default={field.default ?? ''} required={field.required}></textarea>
+            ) : field.type === 'select' ? (
+              <select id={field.name} data-field={field.name} data-default={field.default ?? ''}>
+                {field.options?.map((option) => <option value={option.value}>{option.label}</option>)}
+              </select>
+            ) : (
+              <input
+                id={field.name}
+                type={field.type === 'number' ? 'number' : 'text'}
+                min={field.type === 'number' ? '0' : undefined}
+                data-field={field.name}
+                data-default={field.default ?? ''}
+                required={field.required}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+      <p id="editor-feedback" class="alert hidden"></p>
+      <button class="btn btn-primary form-submit">Guardar</button>
+    </form>
+  </div>
+
+  <script>
+    import { initCrud } from '../../scripts/admin-crud.js';
+    initCrud();
+  </script>
+</AdminLayout>

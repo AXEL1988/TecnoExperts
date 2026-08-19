@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getPartners, getServices, getSetting, getStats, getTeam } from '../lib/db';
+
+const services = getServices();
+const homeServices = services.slice(0, 3);
+const partners = getPartners();
+const stats = getStats();
+const team = getTeam();
+const heroTitle = getSetting('hero_title');
+const heroSubtitle = getSetting('hero_subtitle');
+const whatsapp = getSetting('whatsapp_url');
+const whyPoints = getSetting('why_points').split('\n').filter(Boolean);
+
+/* El titular se parte en dos: la segunda mitad va en azul, como en la maqueta. */
+const [titleLead, ...titleRest] = heroTitle.split('.').filter((part) => part.trim());
+---
+<BaseLayout title="Tecno Experts | Infraestructura tecnológica" description={heroSubtitle}>
+  <section class="hero">
+    <div class="hero-media">
+      <img src="/img/hero/hero-datacenter.webp" alt="Ingeniero de Tecno Experts trabajando en un data center"
+           width="1600" height="834" fetchpriority="high" />
+    </div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <h1>
+          {titleLead}.
+          {titleRest.length > 0 && <><br /><span class="accent">{titleRest.join('.').trim()}.</span></>}
+        </h1>
+        <p class="lead">{heroSubtitle}</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/contacto">
+            <Icon name="calendar" size={19} /> Solicita un Diagnóstico Gratuito
+            <Icon name="arrow-right" size={17} stroke={2} />
+          </a>
+          <a class="btn btn-outline btn-lg" href={whatsapp} target="_blank" rel="noreferrer">
+            <Icon name="whatsapp" size={19} /> Hablar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container partner-bar">
+    <div class="partner-inner">
+      <p class="partner-intro">{getSetting('partner_intro')}</p>
+      <div class="partner-logos">
+        {partners.map((partner) => (
+          partner.image_url
+            ? <img src={partner.image_url} alt={partner.name} loading="lazy" />
+            : <span>{partner.name}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container services-layout">
+      <div>
+        <span class="kicker">La continuidad operativa no es un lujo</span>
+        <h2>Es la base de tu negocio.</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="grid-3">
+        {homeServices.map((service, index) => (
+          <article class="card service-card">
+            <div class="icon-tile"><Icon name={service.icon_name ?? 'cube'} size={26} /></div>
+            <h3>{index + 1}. {service.short_title ?? service.title}</h3>
+            <p>{service.short_description}</p>
+            <a class="service-more" href="/soluciones">
+              Ver más <Icon name="arrow-right" size={16} stroke={2} />
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="cta-banner">
+        <div>
+          <h2>¿Tu infraestructura sobreviviría un incidente crítico hoy a las 2 AM?</h2>
+          <p>Deja de adivinar. Obtén un diagnóstico técnico con un ingeniero experto o cotiza tu proyecto directamente.</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href="/contacto">
+              <Icon name="calendar" size={18} /> Agendar Diagnóstico <Icon name="arrow-right" size={16} stroke={2} />
+            </a>
+            <a class="btn btn-outline" href={whatsapp} target="_blank" rel="noreferrer">
+              <Icon name="whatsapp" size={18} /> Hablar por WhatsApp con un Asesor
+            </a>
+          </div>
+        </div>
+        <div class="cta-visual">
+          <img src="/img/hero/seguridad-banner.webp" alt="" width="800" height="366" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="card stats-bar">
+      {stats.map((stat) => (
+        <div class="stat">
+          <div class="icon-tile" style="width:44px;height:44px;border-radius:12px;">
+            <Icon name={stat.icon_name} size={22} />
+          </div>
+          <div>
+            <div class="stat-value">{stat.value}</div>
+            <div class="stat-label">{stat.label}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container why-grid">
+      <div>
+        <span class="kicker">¿Por qué Tecno Experts?</span>
+        <h2>{getSetting('why_title')}</h2>
+        <ul class="check-list">
+          {whyPoints.map((point) => (
+            <li><Icon name="check-circle" size={21} /> {point}</li>
+          ))}
+        </ul>
+      </div>
+      <img src="/img/servicios/candado-seguridad.webp" alt="Seguridad de la infraestructura"
+           width="900" height="600" loading="lazy" />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="team-panel">
+        <div>
+          <h2>Conoce al equipo que protege tu operación.</h2>
+          <p>Detrás de cada servidor en línea, hay un especialista de Tecno Experts.</p>
+          <a class="btn btn-blue" href="/nosotros" style="margin-top:22px;">
+            Conocer más sobre nosotros <Icon name="arrow-right" size={16} stroke={2} />
+          </a>
+        </div>
+        <div class="team-strip">
+          {team.map((person) => (
+            <article class="team-mini">
+              {person.image_url && <img src={person.image_url} alt={person.name} loading="lazy" />}
+              <strong>{person.name}</strong>
+              <span class="role">{person.role}</span>
+              <p>{person.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

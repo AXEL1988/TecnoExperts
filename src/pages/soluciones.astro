@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getServices, getSetting } from '../lib/db';
+const services = getServices();
+const whatsapp = getSetting('whatsapp_url');
+---
+<BaseLayout title="Soluciones | Tecno Experts"
+            description="Soluciones técnicas B2B para evitar el downtime y proteger tu operación.">
+  <section class="hero">
+    <div class="hero-media">
+      <img src="/img/hero/datacenter-pasillo.webp" alt="" width="1600" height="651" />
+    </div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="kicker">Nuestras especialidades</span>
+        <h1>Especialidades de<br /><span class="accent">Infraestructura</span></h1>
+        <div class="rule"></div>
+        <p class="lead">Soluciones técnicas B2B para evitar el downtime y proteger tu operación.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {services.map((service, index) => (
+        <article class={`card solution-item ${index === 0 ? 'open' : ''}`} data-solution>
+          <button class="solution-head" aria-expanded={index === 0 ? 'true' : 'false'}>
+            <span class="solution-brand">
+              {service.icon_url && <img src={service.icon_url} alt={service.title} loading="lazy" />}
+            </span>
+            <span class="solution-heading">
+              <span class="solution-num">{String(index + 1).padStart(2, '0')}.</span>
+              <h2>{service.title}</h2>
+            </span>
+            <span class="solution-toggle">
+              <Icon name={index === 0 ? 'minus' : 'plus'} size={19} stroke={2.4} />
+            </span>
+          </button>
+          <div class="solution-body">
+            <span class="spacer"></span>
+            <div class="solution-detail">
+              <span class="label">Beneficio:</span>
+              <p>{service.short_description}</p>
+              <a class="btn btn-primary" href={service.cta_url}>
+                {service.cta_text} <Icon name="arrow-right" size={16} stroke={2} />
+              </a>
+            </div>
+            {service.image_url && (
+              <figure class="solution-figure">
+                <img src={service.image_url} alt={service.title} width="900" height="600" loading="lazy" />
+              </figure>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="cta-banner">
+        <div>
+          <h2>¿No sabes por dónde empezar?</h2>
+          <p>Te guiamos y diseñamos la solución ideal para tu empresa en una consultoría gratuita.</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href="/contacto">
+              Agendar Diagnóstico <Icon name="arrow-right" size={16} stroke={2} />
+            </a>
+            <a class="btn btn-outline" href={whatsapp} target="_blank" rel="noreferrer">
+              <Icon name="whatsapp" size={18} /> Hablar por WhatsApp
+            </a>
+          </div>
+        </div>
+        <div class="cta-visual">
+          <img src="/img/hero/seguridad-banner.webp" alt="" width="800" height="366" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-solution]').forEach((item) => {
+      const head = item.querySelector('.solution-head');
+      head?.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('[data-solution]').forEach((other) => {
+          other.classList.remove('open');
+          other.querySelector('.solution-head')?.setAttribute('aria-expanded', 'false');
+          const icon = other.querySelector('.solution-toggle svg');
+          if (icon) icon.innerHTML = '<path d="M12 5v14M5 12h14"/>';
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          head.setAttribute('aria-expanded', 'true');
+          const icon = item.querySelector('.solution-toggle svg');
+          if (icon) icon.innerHTML = '<path d="M5 12h14"/>';
+        }
+      });
+    });
+  </script>
+</BaseLayout>

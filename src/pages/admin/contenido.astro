@@ -1,0 +1,61 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getUserFromToken } from '../../lib/auth';
+import { getSetting } from '../../lib/db';
+import { settingGroups, siteSettings } from '../../lib/settings';
+
+if (!getUserFromToken(Astro.cookies.get('te_session')?.value)) return Astro.redirect('/admin/login');
+
+const values = Object.fromEntries(siteSettings.map((setting) => [setting.key, getSetting(setting.key)]));
+---
+<AdminLayout title="Textos del sitio" active="contenido">
+  <div class="admin-card">
+    <div class="admin-toolbar">
+      <div>
+        <div class="card-number">Contenido</div>
+        <h1 class="admin-title">Textos del sitio</h1>
+        <p>Edita los textos de Home, Nosotros y Contacto sin tocar el código.</p>
+      </div>
+    </div>
+    <form id="settings-form">
+      {settingGroups.map((group) => (
+        <fieldset class="settings-group">
+          <legend>{group}</legend>
+          <div class="form-grid">
+            {siteSettings.filter((setting) => setting.group === group).map((setting) => (
+              <div class={`field ${setting.type === 'textarea' ? 'full' : ''}`}>
+                <label for={setting.key}>{setting.label}{setting.required && ' *'}</label>
+                {setting.type === 'textarea' ? (
+                  <textarea id={setting.key} data-setting={setting.key} required={setting.required}>{values[setting.key]}</textarea>
+                ) : (
+                  <input id={setting.key} data-setting={setting.key} value={values[setting.key]} required={setting.required} />
+                )}
+                {setting.hint && <small>{setting.hint}</small>}
+              </div>
+            ))}
+          </div>
+        </fieldset>
+      ))}
+      <p id="settings-feedback" class="alert hidden"></p>
+      <button class="btn btn-primary form-submit">Guardar cambios</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.querySelector('#settings-form');
+    const feedback = document.querySelector('#settings-feedback');
+    form?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const inputs = [...form.querySelectorAll('[data-setting]')];
+      const payload = Object.fromEntries(inputs.map((input) => [input.dataset.setting, input.value]));
+      const response = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = response.ok ? {} : await response.json().catch(() => ({}));
+      feedback.textContent = response.ok ? 'Cambios guardados.' : data.message ?? 'No fue posible guardar los cambios.';
+      feedback.classList.remove('hidden');
+    });
+  </script>
+</AdminLayout>
