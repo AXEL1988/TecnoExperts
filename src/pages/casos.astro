@@ -30,7 +30,7 @@ const frases = (texto: string) =>
           <div class="case-media">
             {item.image_url && <img src={item.image_url} alt={item.sector} width="1200" height="800" loading="lazy" />}
             <span class="case-badge">{String(index + 1).padStart(2, '0')}</span>
-            <span class="case-icon"><Icon name={item.icon_name ?? 'building'} size={26} /></span>
+            <span class="case-icon"><Icon name={item.icon_name ?? 'building'} size={32} /></span>
           </div>
           <div class="case-title">
             <h2>{item.title}</h2>
@@ -38,21 +38,21 @@ const frases = (texto: string) =>
           </div>
           <div class="case-steps">
             <div class="case-step">
-              <span class="step-icon step-problem"><Icon name="alert" size={20} /></span>
+              <span class="step-icon step-problem"><Icon name="alert" size={22} /></span>
               <div>
                 <strong>Problema:</strong>
                 {frases(item.problem).map((f) => <p>{f}</p>)}
               </div>
             </div>
             <div class="case-step">
-              <span class="step-icon step-solution"><Icon name="gear" size={20} /></span>
+              <span class="step-icon step-solution"><Icon name="gear" size={22} /></span>
               <div>
                 <strong>Solución:</strong>
                 {frases(item.solution).map((f) => <p>{f}</p>)}
               </div>
             </div>
             <div class="case-step">
-              <span class="step-icon step-result"><Icon name="check-circle" size={20} /></span>
+              <span class="step-icon step-result"><Icon name="check-circle" size={22} /></span>
               <div>
                 <strong>Resultado:</strong>
                 {frases(item.result).map((f) => <p>{f}</p>)}
@@ -68,7 +68,7 @@ const frases = (texto: string) =>
     <div class="container">
       <div class="cta-banner">
         <div class="cta-content">
-          <h2>Convierte tu infraestructura en tu mayor <span style="color:#7FB0F5">ventaja competitiva.</span></h2>
+          <h2>Convierte tu infraestructura<br />en tu mayor <span class="accent-soft">ventaja competitiva.</span></h2>
           <p>Hablemos de cómo podemos ayudarte a garantizar la continuidad, seguridad y rendimiento de tu operación.</p>
           <div class="cta-actions">
             <a class="btn btn-primary" href="/contacto">
