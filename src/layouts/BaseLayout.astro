@@ -14,7 +14,6 @@ const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith
 const services = getServices();
 const resources = getNavResources();
 const whatsapp = getSetting('whatsapp_url');
-const email = getSetting('company_email');
 ---
 <html lang="es">
   <head>
@@ -107,11 +106,14 @@ const email = getSetting('company_email');
           <a href="/soluciones">Backup y Recuperación</a>
           <a href="/soluciones">Hardware Corporativo</a>
           <a href="/soluciones">DRaaS, DRP e ISO 27001</a>
+          <a href="/soluciones">Ciberseguridad</a>
         </div>
         <div class="footer-col">
           <h3>Empresa</h3>
           <a href="/nosotros">Nosotros</a>
           <a href="/casos">Casos de Éxito</a>
+          <a href="/casos">Recursos</a>
+          <a href="/casos">Blog</a>
           <a href="/contacto">Contacto</a>
         </div>
         <div class="footer-col">
@@ -119,16 +121,16 @@ const email = getSetting('company_email');
           <a href="/contacto">Política de Privacidad</a>
           <a href="/contacto">Términos y Condiciones</a>
         </div>
-        <div class="footer-help">
+        <div class="footer-col footer-help">
           <h3>¿Necesitas ayuda?</h3>
           <p>Nuestro equipo está listo para responder tus dudas.</p>
-          <a class="btn btn-outline" href={whatsapp} target="_blank" rel="noreferrer">
+          <a class="btn btn-footer" href={whatsapp} target="_blank" rel="noreferrer">
             <Icon name="whatsapp" size={18} /> Hablar por WhatsApp
           </a>
         </div>
       </div>
       <div class="container footer-bottom">
-        © {new Date().getFullYear()} Tecno Experts. Todos los derechos reservados. · {email}
+        © {new Date().getFullYear()} Tecno Experts. Todos los derechos reservados.
       </div>
     </footer>
 
