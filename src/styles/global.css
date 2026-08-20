@@ -174,6 +174,9 @@ p { margin: 0 0 14px; }
 .hero-copy h1 { margin-bottom: 22px; max-width: 490px; }
 /* Nosotros usa un titular de tres líneas, algo más ancho que la portada. */
 .hero-nosotros h1 { max-width: 620px; }
+/* «Especialidades de» necesita 560px para no partirse. */
+.hero-soluciones h1 { max-width: 600px; }
+.hero-soluciones .lead { max-width: 520px; }
 .hero-nosotros .lead { max-width: 440px; }
 .hero-media { position: absolute; top: 0; right: 0; bottom: 0; width: 56%; }
 .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; }
@@ -344,26 +347,36 @@ p { margin: 0 0 14px; }
 .case-step p { margin: 0; color: var(--muted); font-size: .92rem; }
 
 /* ---------- Soluciones (acordeón) ---------- */
-.solution-item { margin-bottom: 18px; overflow: hidden; transition: .25s; }
+.solution-item { position: relative; margin-bottom: 18px; transition: .25s; }
 .solution-item.open { border-color: #BFD8FA; box-shadow: var(--shadow); }
-.solution-head {
-  width: 100%; background: none; border: 0; cursor: pointer; text-align: left;
-  display: grid; grid-template-columns: 150px 1fr auto; gap: 28px; align-items: center; padding: 22px;
+.solution-row {
+  display: grid; grid-template-columns: 210px minmax(0, 1fr) minmax(0, 500px); gap: 40px;
+  align-items: center; padding: 26px 28px;
 }
-.solution-brand { width: 150px; height: 130px; border-radius: 14px; display: grid; place-items: center; overflow: hidden; }
+.solution-brand { width: 210px; height: 210px; border-radius: 18px; overflow: hidden; display: grid; place-items: center; }
 .solution-brand img { width: 100%; height: 100%; object-fit: cover; }
-.solution-heading { display: flex; align-items: baseline; gap: 16px; }
-.solution-num { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; color: var(--blue); }
-.solution-heading h2 { font-size: 1.4rem; margin: 0; }
-.solution-toggle { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; flex: none; }
-.solution-body { display: grid; grid-template-columns: 150px 1fr 320px; gap: 28px; padding: 0 22px 26px; align-items: center; }
-.solution-body .spacer { grid-column: 1; }
-.solution-detail { grid-column: 2; }
-.solution-detail .label { color: var(--blue); font-weight: 600; font-size: .9rem; display: block; margin-bottom: 6px; }
-.solution-detail p { color: var(--muted); font-size: .95rem; }
-.solution-figure { grid-column: 3; }
-.solution-figure img { width: 100%; border-radius: 12px; }
-.solution-item:not(.open) .solution-body { display: none; }
+.solution-heading { display: flex; align-items: baseline; gap: 18px; }
+.solution-num { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--blue); }
+.solution-heading h2 { font-size: 1.55rem; margin: 0; }
+.solution-main .rule { width: 34px; height: 3px; margin: 14px 0 18px; }
+.solution-main .label { color: var(--blue); font-weight: 600; font-size: .95rem; display: block; margin-bottom: 8px; }
+.solution-main p { color: var(--muted); font-size: .95rem; max-width: 430px; margin: 0; }
+/* El botón de cotización sólo aparece en la solución desplegada. */
+.solution-cta { margin-top: 22px; }
+.solution-item:not(.open) .solution-cta { display: none; }
+.solution-figure { margin: 0; }
+.solution-figure img { width: 100%; height: auto; border-radius: 12px; }
+.solution-toggle {
+  position: absolute; top: 30px; right: 28px;
+  width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--blue); color: #fff; display: grid; place-items: center;
+}
+.solution-toggle:hover { background: var(--blue-700); }
+
+@media (max-width: 1180px) {
+  .solution-row { grid-template-columns: 150px minmax(0, 1fr) minmax(0, 360px); gap: 28px; }
+  .solution-brand { width: 150px; height: 150px; }
+}
 
 /* ---------- Contacto ---------- */
 .contact-grid { display: grid; grid-template-columns: 1fr .92fr; gap: 26px; align-items: start; }
@@ -498,11 +511,10 @@ th { color: #5d6a7d; font-size: .82rem; text-transform: uppercase; letter-spacin
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
   .stat { border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 16px; min-width: 0; }
   .case-row { grid-template-columns: 1fr; }
-  .solution-head { grid-template-columns: 92px 1fr auto; gap: 16px; }
-  .solution-brand { width: 92px; height: 84px; }
-  .solution-body { padding: 0 22px 24px; }
-  .solution-figure, .solution-detail { grid-column: 1; }
-  .solution-body .spacer { display: none; }
+  .solution-row { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
+  .solution-brand { width: 120px; height: 120px; }
+  .solution-main p { max-width: none; }
+  .solution-toggle { top: 22px; right: 22px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .partner-bar { margin-top: 0; }
   .partner-inner { justify-content: center; padding: 22px; }

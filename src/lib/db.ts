@@ -216,6 +216,27 @@ const fillService = db.prepare(`
 `);
 for (const [slug, image, icon] of serviceAssets) fillService.run(image, icon, slug);
 
+const beneficios: Array<[string, string, string]> = [
+  ['virtualizacion-vmware',
+   'Consolida tu infraestructura física, reduce costos operativos y eleva la disponibilidad de tus sistemas críticos.',
+   'Consolida tu infraestructura física, reduce costos operativos y eleva la disponibilidad de tus sistemas críticos a un 99.99%.'],
+  ['backup-recuperacion-veeam',
+   'Backups inmutables, restauraciones en minutos y protección contra ransomware.',
+   'Backups inmutables, restauraciones en minutos y protección contra ransomware. Tu seguro de vida digital.'],
+  ['hardware-hp-lenovo',
+   'Provisión de servidores y almacenamiento, dimensionamiento, virtualización y soporte experto.',
+   'Provisión de servidores y almacenamiento. Analizamos tus cargas de trabajo, dimensionamos el hardware exacto, lo virtualizamos y nos encargamos del soporte.'],
+  ['draas-drp-iso-27001',
+   'Planes de recuperación ante desastres y adecuaciones técnicas para cumplimiento normativo.',
+   'Planes de recuperación ante desastres y adecuaciones técnicas para cumplimiento normativo (SEPS, SuperCias) llevados a la realidad de tu red.']
+];
+const corregirBeneficio = db.prepare(`UPDATE services SET short_description = ? WHERE slug = ? AND short_description = ?`);
+for (const [slug, anterior, nuevo] of beneficios) corregirBeneficio.run(nuevo, slug, anterior);
+
+// Texto del botón según la maqueta.
+db.prepare(`UPDATE services SET cta_text = ? WHERE slug = ? AND cta_text = ?`)
+  .run('Solicitar Cotización de Virtualización', 'virtualizacion-vmware', 'Solicitar cotización');
+
 const serviceMeta: Array<[string, string, string, string]> = [
   ['virtualizacion-vmware', 'Virtualización (VMware)', 'cube',
    'Migramos y consolidamos tus servidores sin afectar tu operación.'],
