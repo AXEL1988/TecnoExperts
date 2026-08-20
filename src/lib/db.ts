@@ -184,7 +184,9 @@ if (db.prepare('SELECT COUNT(*) as count FROM partners').get().count === 0) {
 // Migraciones incrementales: columnas de imagen para servicios y casos.
 function addColumn(table: string, column: string, definition: string) {
   const exists = db.prepare(`SELECT 1 FROM pragma_table_info(?) WHERE name = ?`).get(table, column);
-  if (!exists) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  if (exists) return false;
+  db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  return true;
 }
 addColumn('services', 'image_url', 'TEXT');
 addColumn('services', 'icon_url', 'TEXT');
@@ -193,6 +195,13 @@ addColumn('services', 'short_title', 'TEXT');
 addColumn('services', 'icon_name', 'TEXT');
 addColumn('success_cases', 'icon_name', 'TEXT');
 addColumn('team_members', 'certification_logo', 'TEXT');
+// Texto breve de portada: en Soluciones se usa la descripción larga.
+addColumn('services', 'home_description', 'TEXT');
+// La barra de confianza de la portada lista solo a los partners comerciales.
+const partnerScopeIsNew = addColumn('partners', 'show_in_home', 'INTEGER NOT NULL DEFAULT 1');
+if (partnerScopeIsNew) {
+  db.prepare(`UPDATE partners SET show_in_home = 0 WHERE name = ?`).run('ISO 27001');
+}
 
 // Assets del cliente: se aplican solo si el registro aún no tiene imagen propia.
 const serviceAssets: Array<[string, string, string]> = [
@@ -207,17 +216,23 @@ const fillService = db.prepare(`
 `);
 for (const [slug, image, icon] of serviceAssets) fillService.run(image, icon, slug);
 
-const serviceMeta: Array<[string, string, string]> = [
-  ['virtualizacion-vmware', 'Virtualización (VMware)', 'cube'],
-  ['backup-recuperacion-veeam', 'Continuidad (Veeam)', 'shield-check'],
-  ['hardware-hp-lenovo', 'Hardware Corporativo', 'server'],
-  ['draas-drp-iso-27001', 'DRaaS, DRP e ISO 27001', 'shield-lock']
+const serviceMeta: Array<[string, string, string, string]> = [
+  ['virtualizacion-vmware', 'Virtualización (VMware)', 'cube',
+   'Migramos y consolidamos tus servidores sin afectar tu operación.'],
+  ['backup-recuperacion-veeam', 'Continuidad (Veeam)', 'shield-check',
+   'Garantizamos restauraciones de backup en minutos.'],
+  ['hardware-hp-lenovo', 'Hardware Corporativo', 'server',
+   'Equipamiento HP y Lenovo integrado y con soporte experto directo.'],
+  ['draas-drp-iso-27001', 'DRaaS, DRP e ISO 27001', 'shield-lock',
+   'Planes de recuperación ante desastres y cumplimiento normativo.']
 ];
 const fillServiceMeta = db.prepare(`
-  UPDATE services SET short_title = COALESCE(NULLIF(short_title, ''), ?), icon_name = COALESCE(NULLIF(icon_name, ''), ?)
+  UPDATE services SET short_title = COALESCE(NULLIF(short_title, ''), ?),
+                      icon_name = COALESCE(NULLIF(icon_name, ''), ?),
+                      home_description = COALESCE(NULLIF(home_description, ''), ?)
   WHERE slug = ?
 `);
-for (const [slug, shortTitle, icon] of serviceMeta) fillServiceMeta.run(shortTitle, icon, slug);
+for (const [slug, shortTitle, icon, homeText] of serviceMeta) fillServiceMeta.run(shortTitle, icon, homeText, slug);
 
 const teamAssets: Array<[string, string, string]> = [
   ['Francisco Silva', '/img/equipo/francisco-silva.webp', '/img/partners/vmware.png'],
@@ -284,13 +299,13 @@ const fillPartner = db.prepare(`UPDATE partners SET image_url = COALESCE(NULLIF(
 for (const [name, image] of partnerAssets) fillPartner.run(image, name);
 
 if (!db.prepare('SELECT 1 FROM partners WHERE name = ?').get('ISO 27001')) {
-  db.prepare(`INSERT INTO partners (name, image_url, display_order) VALUES (?, ?, ?)`)
+  db.prepare(`INSERT INTO partners (name, image_url, display_order, show_in_home) VALUES (?, ?, ?, 0)`)
     .run('ISO 27001', '/img/partners/iso-27001.png', 7);
 }
 
 const settings = {
   hero_title: 'Infraestructura que no falla. Equipo que no abandona.',
-  hero_subtitle: 'Diseñamos, implementamos y sostenemos infraestructuras críticas y virtualización para las organizaciones más exigentes del Ecuador.',
+  hero_subtitle: 'Diseñamos, implementamos y sostenemos infraestructuras críticas y virtualización para las organizaciones más exigentes del Ecuador. Respuesta segura, garantizada por ingenieros certificados.',
   company_email: 'irene@tecno-experts.com',
   whatsapp_url: 'https://wa.me/',
   phone: '+593',
@@ -302,6 +317,16 @@ const settings = {
 };
 const setSetting = db.prepare(`INSERT INTO site_settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO NOTHING`);
 for (const [key, value] of Object.entries(settings)) setSetting.run(key, value);
+
+// Textos corregidos contra la documentación del cliente. Solo se aplican si el valor
+// sigue siendo el anterior, para no pisar lo que se haya editado desde el panel.
+const textFixes: Array<[string, string, string]> = [
+  ['hero_subtitle',
+   'Diseñamos, implementamos y sostenemos infraestructuras críticas y virtualización para las organizaciones más exigentes del Ecuador.',
+   settings.hero_subtitle]
+];
+const fixSetting = db.prepare(`UPDATE site_settings SET value = ? WHERE key = ? AND value = ?`);
+for (const [key, previous, next] of textFixes) fixSetting.run(next, key, previous);
 
 export function getSetting(key: string, fallback = ''): string {
   return db.prepare('SELECT value FROM site_settings WHERE key = ?').get(key)?.value ?? fallback;
@@ -327,6 +352,8 @@ export function getNavResources(activeOnly = true) {
   return db.prepare(`SELECT * FROM nav_resources ${activeOnly ? 'WHERE is_active = 1' : ''} ORDER BY display_order, id`).all();
 }
 
-export function getPartners(activeOnly = true) {
-  return db.prepare(`SELECT * FROM partners ${activeOnly ? 'WHERE is_active = 1' : ''} ORDER BY display_order, id`).all();
+export function getPartners(activeOnly = true, homeOnly = false) {
+  const filters = [activeOnly ? 'is_active = 1' : '', homeOnly ? 'show_in_home = 1' : ''].filter(Boolean);
+  const where = filters.length ? `WHERE ${filters.join(' AND ')}` : '';
+  return db.prepare(`SELECT * FROM partners ${where} ORDER BY display_order, id`).all();
 }

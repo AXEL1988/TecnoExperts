@@ -5,7 +5,7 @@ import { getPartners, getServices, getSetting, getStats, getTeam } from '../lib/
 
 const services = getServices();
 const homeServices = services.slice(0, 3);
-const partners = getPartners();
+const partners = getPartners(true, true);
 const stats = getStats();
 const team = getTeam();
 const heroTitle = getSetting('hero_title');
@@ -67,7 +67,7 @@ const [titleLead, ...titleRest] = heroTitle.split('.').filter((part) => part.tri
           <article class="card service-card">
             <div class="icon-tile"><Icon name={service.icon_name ?? 'cube'} size={26} /></div>
             <h3>{index + 1}. {service.short_title ?? service.title}</h3>
-            <p>{service.short_description}</p>
+            <p>{service.home_description ?? service.short_description}</p>
             <a class="service-more" href="/soluciones">
               Ver más <Icon name="arrow-right" size={16} stroke={2} />
             </a>
@@ -87,7 +87,7 @@ const [titleLead, ...titleRest] = heroTitle.split('.').filter((part) => part.tri
             <a class="btn btn-primary" href="/contacto">
               <Icon name="calendar" size={18} /> Agendar Diagnóstico <Icon name="arrow-right" size={16} stroke={2} />
             </a>
-            <a class="btn btn-outline" href={whatsapp} target="_blank" rel="noreferrer">
+            <a class="btn btn-blue" href={whatsapp} target="_blank" rel="noreferrer">
               <Icon name="whatsapp" size={18} /> Hablar por WhatsApp con un Asesor
             </a>
           </div>

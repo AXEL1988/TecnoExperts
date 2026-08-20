@@ -8,6 +8,8 @@ export interface FieldDef {
   full?: boolean;
   options?: Array<{ value: string; label: string }>;
   default?: string;
+  /** Se guarda como entero aunque el control sea un select. */
+  numeric?: boolean;
 }
 
 export interface EntityDef {
@@ -25,6 +27,7 @@ const activeField: FieldDef = {
   name: 'is_active',
   label: 'Estado',
   type: 'select',
+  numeric: true,
   default: '1',
   options: [
     { value: '1', label: 'Activo' },
@@ -46,6 +49,7 @@ export const entities: Record<string, EntityDef> = {
       { name: 'short_description', label: 'Descripción corta', type: 'textarea', required: true, full: true },
       { name: 'benefit', label: 'Beneficio', type: 'textarea', required: true, full: true },
       { name: 'short_title', label: 'Título corto (portada)' },
+      { name: 'home_description', label: 'Descripción de portada', type: 'textarea', full: true },
       { name: 'image_url', label: 'Imagen (ruta o URL)', type: 'url' },
       { name: 'icon_url', label: 'Logo de marca (ruta o URL)', type: 'url' },
       { name: 'icon_name', label: 'Icono de línea', default: 'cube' },
@@ -133,6 +137,8 @@ export const entities: Record<string, EntityDef> = {
       { name: 'name', label: 'Nombre', required: true },
       { name: 'image_url', label: 'URL del logo', type: 'url' },
       { name: 'url', label: 'Sitio web', type: 'url' },
+      { name: 'show_in_home', label: 'Barra de portada', type: 'select', numeric: true, default: '1',
+        options: [{ value: '1', label: 'Sí' }, { value: '0', label: 'No' }] },
       orderField,
       activeField
     ]
