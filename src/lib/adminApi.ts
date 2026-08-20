@@ -19,7 +19,7 @@ export function readValues(entity: EntityDef, body: Record<string, unknown>) {
   const values: Array<string | number | null> = [];
   for (const field of entity.fields) {
     const raw = body[field.name];
-    if (field.type === 'number' || field.name === 'is_active') {
+    if (field.type === 'number' || field.numeric || field.name === 'is_active') {
       values.push(Number(raw ?? field.default ?? 0) || 0);
       continue;
     }

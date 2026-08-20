@@ -27,7 +27,7 @@
   --white: #FFFFFF;
 
   /* Sistema */
-  --max: 1200px;
+  --max: 1318px;
   --radius: 16px;
   --radius-lg: 22px;
   --shadow-sm: 0 2px 10px rgba(15, 36, 69, .05);
@@ -63,6 +63,7 @@ p { margin: 0 0 14px; }
 .accent { color: var(--blue); }
 .rule { width: 54px; height: 4px; border-radius: 4px; background: var(--blue); margin: 0 0 26px; }
 .lead { font-size: 1.06rem; color: var(--muted); max-width: 56ch; }
+.hero-copy .lead { font-size: 1.18rem; line-height: 1.72; max-width: 500px; }
 .eyebrow-line { display: flex; align-items: center; gap: 12px; }
 
 .btn {
@@ -107,7 +108,7 @@ p { margin: 0 0 14px; }
 }
 .nav-wrap { display: flex; align-items: center; gap: 30px; min-height: 84px; }
 .brand { display: inline-flex; align-items: center; flex: none; }
-.main-nav { display: flex; align-items: center; gap: 28px; margin-left: auto; font-size: .93rem; }
+.main-nav { display: flex; align-items: center; gap: 26px; margin-left: auto; font-size: 1rem; }
 .main-nav > a {
   position: relative; color: #45566E; font-weight: 500; padding: 6px 0;
   display: inline-flex; align-items: center; gap: 5px;
@@ -123,7 +124,7 @@ p { margin: 0 0 14px; }
 /* ---------- Desplegables de navegación ---------- */
 .nav-item { position: relative; }
 .nav-link {
-  background: none; border: 0; cursor: pointer; font-size: .93rem; font-weight: 500;
+  background: none; border: 0; cursor: pointer; font-size: 1rem; font-weight: 500;
   color: #45566E; padding: 6px 0; display: inline-flex; align-items: center; gap: 5px;
   position: relative; font-family: inherit;
 }
@@ -164,15 +165,15 @@ p { margin: 0 0 14px; }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; overflow: hidden; background: var(--white); }
-.hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; min-height: 540px; gap: 40px; }
-.hero-copy { padding: 74px 0; position: relative; z-index: 2; max-width: 620px; }
-.hero-copy h1 { margin-bottom: 22px; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; min-height: 500px; gap: 40px; }
+.hero-copy { padding: 56px 0 56px 36px; position: relative; z-index: 2; max-width: 620px; }
+.hero-copy h1 { margin-bottom: 22px; max-width: 490px; }
 .hero-media { position: absolute; top: 0; right: 0; bottom: 0; width: 56%; }
 .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; }
 /* El degradado funde la foto con el fondo blanco, como en la maqueta */
 .hero-media::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,.92) 18%, rgba(255,255,255,.35) 45%, rgba(255,255,255,0) 72%);
+  background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,.96) 10%, rgba(255,255,255,.55) 20%, rgba(255,255,255,0) 33%);
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
 .hero-badges { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 36px; }
@@ -182,19 +183,20 @@ p { margin: 0 0 14px; }
 /* ---------- Barra de partners ---------- */
 .partner-bar { margin: -34px auto 0; position: relative; z-index: 3; }
 .partner-inner {
-  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
-  box-shadow: var(--shadow); padding: 24px 30px; display: flex; align-items: center; gap: 30px; flex-wrap: wrap;
+  background: #F8F9FE; border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 26px 40px; display: flex; align-items: center; gap: 30px; flex-wrap: wrap;
 }
-.partner-intro { font-size: .85rem; color: var(--muted); max-width: 210px; line-height: 1.45; flex: none; }
+.partner-intro { font-size: 1.02rem; color: var(--muted); max-width: 290px; line-height: 1.6; flex: none; }
 .partner-logos { display: flex; align-items: center; gap: 34px; flex-wrap: wrap; flex: 1; justify-content: space-around; border-left: 1px solid var(--line); padding-left: 30px; }
-.partner-logos img { height: 46px; width: auto; object-fit: contain; opacity: .92; transition: .2s; }
+.partner-logos img { max-height: 46px; max-width: 130px; width: auto; height: auto; object-fit: contain; opacity: .92; transition: .2s; }
 .partner-logos img:hover { opacity: 1; transform: scale(1.04); }
 
 /* ---------- Servicios (Home) ---------- */
-.services-layout { display: grid; grid-template-columns: .72fr 2.28fr; gap: 40px; align-items: start; }
-.service-card { padding: 28px; display: flex; flex-direction: column; height: 100%; transition: .2s; }
+.services-layout { display: grid; grid-template-columns: 460px 1fr; gap: 40px; align-items: start; }
+.services-layout h2 { max-width: 290px; }
+.service-card { padding: 24px 22px; display: flex; flex-direction: column; height: 100%; transition: .2s; }
 .service-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
-.service-card h3 { font-size: 1rem; margin: 20px 0 10px; }
+.service-card h3 { font-size: .9rem; letter-spacing: -.01em; margin: 18px 0 10px; }
 .service-card p { color: var(--muted); font-size: .93rem; flex: 1; }
 .service-more { display: inline-flex; align-items: center; gap: 8px; color: var(--blue); font-weight: 600; font-size: .9rem; margin-top: 12px; }
 .service-more:hover { gap: 12px; }
@@ -202,16 +204,30 @@ p { margin: 0 0 14px; }
 /* ---------- Banner CTA oscuro ---------- */
 .cta-banner {
   position: relative; overflow: hidden; border-radius: var(--radius-lg);
-  background: linear-gradient(115deg, var(--navy-900) 0%, #0D2C63 58%, #10306E 100%);
-  color: #fff; padding: 54px; display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: 30px;
+  background: #01122F; color: #fff; padding: 46px 54px;
+  display: grid; grid-template-columns: 1fr; align-items: center; min-height: 333px;
 }
 .cta-banner h2, .cta-banner h3 { color: #fff; }
-.cta-banner p { color: rgba(255,255,255,.76); max-width: 46ch; }
-.cta-banner .btn-outline { background: transparent; border-color: rgba(255,255,255,.34); color: #fff; }
-.cta-banner .btn-outline:hover { background: rgba(255,255,255,.1); border-color: #fff; color: #fff; }
+.cta-banner p { color: rgba(255,255,255,.76); max-width: 560px; }
+.cta-banner .btn-outline, .cta-banner .btn-blue {
+  background: #01122F; border-color: rgba(255,255,255,.28); color: #fff;
+}
+.cta-banner .btn-outline:hover, .cta-banner .btn-blue:hover {
+  background: #071C42; border-color: rgba(255,255,255,.5); color: #fff;
+}
 .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 26px; }
-.cta-visual { position: relative; }
-.cta-visual img { width: 100%; max-width: 400px; margin-left: auto; mix-blend-mode: screen; }
+.cta-visual { position: absolute; inset: 0 0 0 45%; pointer-events: none; }
+.cta-visual img {
+  width: 100%; height: 100%; max-width: none; object-fit: contain; object-position: right center;
+  mix-blend-mode: screen;
+}
+/* Funde el borde izquierdo de la imagen con el fondo del banner. */
+.cta-visual::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, #01122F 0%, rgba(1,18,47,.55) 22%, rgba(1,18,47,0) 55%);
+}
+.cta-content { position: relative; z-index: 2; max-width: 640px; }
+.cta-banner h2 { max-width: 640px; font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.38; letter-spacing: -.01em; }
 
 /* ---------- Barra de estadísticas ---------- */
 .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); }
@@ -228,21 +244,38 @@ p { margin: 0 0 14px; }
 
 /* ---------- Equipo ---------- */
 .team-panel {
-  background: linear-gradient(120deg, var(--navy-900), var(--navy-800));
-  border-radius: var(--radius-lg); padding: 48px; color: #fff;
-  display: grid; grid-template-columns: .9fr 2.1fr; gap: 44px; align-items: center;
+  background: #031B3F; border-radius: var(--radius-lg); padding: 40px 44px; color: #fff;
+  display: grid; grid-template-columns: 340px 1fr; gap: 40px; align-items: center;
 }
+.team-panel h2 { font-size: clamp(1.5rem, 2.1vw, 1.95rem); line-height: 1.2; max-width: 330px; }
+.team-panel p { max-width: 330px; font-size: 1rem; }
 .team-panel h2 { color: #fff; }
 .team-panel p { color: rgba(255,255,255,.72); }
-.team-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.team-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .team-mini {
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
-  border-radius: 14px; padding: 16px; text-align: center;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
+  border-radius: 14px; padding: 0 0 16px; text-align: left;
+  display: flex; flex-direction: column; overflow: hidden;
 }
-.team-mini img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; margin-bottom: 14px; }
-.team-mini strong { display: block; font-family: var(--font-display); font-size: .95rem; color: #fff; }
-.team-mini .role { display: block; font-size: .76rem; color: #7FB0F5; margin-bottom: 10px; }
-.team-mini p { font-size: .76rem; color: rgba(255,255,255,.66); line-height: 1.45; margin: 0; }
+/* La foto se desvanece hacia el fondo del panel, como en la maqueta. */
+.team-mini-photo {
+  width: 100%; aspect-ratio: 6/5; object-fit: cover; object-position: center 12%;
+  margin-bottom: 10px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 96%),
+                      linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 52%, transparent 96%),
+              linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+.team-mini strong { display: block; font-family: var(--font-display); font-size: .92rem; color: #fff; padding: 0 15px; }
+.team-mini .role { display: block; font-size: .74rem; color: #7FB0F5; margin: 2px 0 9px; padding: 0 15px; }
+.team-mini p { font-size: .75rem; color: rgba(255,255,255,.62); line-height: 1.45; margin: 0; padding: 0 15px; flex: 1; }
+.team-mini-cert { margin-top: 14px; padding: 0 15px; min-height: 38px; display: flex; align-items: center; }
+.team-mini-cert img { max-height: 40px; max-width: 96px; width: auto; }
+/* Los logos de un solo color se invierten para leerse sobre el panel oscuro. */
+.team-mini-cert img.monocromo { filter: brightness(0) invert(1); opacity: .92; }
+.team-mini-cert svg { color: rgba(255,255,255,.8); }
 
 /* Tarjetas de equipo (página Nosotros) */
 .team-card { padding: 0; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
@@ -398,6 +431,7 @@ th { color: #5d6a7d; font-size: .82rem; text-transform: uppercase; letter-spacin
 /* ---------- Adaptable ---------- */
 @media (max-width: 1080px) {
   .services-layout { grid-template-columns: 1fr; }
+  .cta-visual { inset: 0 0 0 35%; }
   .stats-bar { grid-template-columns: repeat(3, 1fr); }
   .stat:nth-child(3) { border-right: 0; }
   .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
@@ -433,7 +467,8 @@ th { color: #5d6a7d; font-size: .82rem; text-transform: uppercase; letter-spacin
   .hero-media { position: relative; width: 100%; height: 250px; }
   .hero-media::after { background: linear-gradient(0deg, #fff 0%, rgba(255,255,255,.25) 60%, rgba(255,255,255,0) 100%); }
   .hero-copy { padding: 34px 0 54px; }
-  .grid-2, .grid-3, .grid-4, .why-grid, .contact-grid, .solution-body, .cta-banner { grid-template-columns: 1fr; }
+  .partner-inner { padding: 22px; }
+  .grid-2, .grid-3, .grid-4, .why-grid, .contact-grid, .solution-body { grid-template-columns: 1fr; }
   .team-strip { grid-template-columns: repeat(2, 1fr); }
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
   .stat { border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 16px; min-width: 0; }
@@ -448,7 +483,8 @@ th { color: #5d6a7d; font-size: .82rem; text-transform: uppercase; letter-spacin
   .partner-inner { justify-content: center; padding: 22px; }
   .partner-logos { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 22px; gap: 24px; }
   .partner-intro { flex: 1 1 100%; max-width: none; text-align: center; }
-  .cta-banner { padding: 34px; }
+  .cta-banner { padding: 34px; min-height: 0; }
+  .cta-content br, .team-panel p br { display: none; }
   .cta-visual { display: none; }
   .section { padding: 58px 0; }
   .admin-layout { grid-template-columns: 1fr; }
