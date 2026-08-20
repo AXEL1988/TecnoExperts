@@ -119,6 +119,7 @@ p { margin: 0 0 14px; }
   display: inline-flex; align-items: center; gap: 5px;
 }
 .main-nav > a:hover { color: var(--navy); }
+.main-nav .btn { padding: 0 20px; margin-left: 6px; }
 .main-nav > a.active { color: var(--navy); font-weight: 600; }
 .main-nav > a.active::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -6px;
