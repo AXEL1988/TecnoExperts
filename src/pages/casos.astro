@@ -3,19 +3,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { getCases } from '../lib/db';
 const cases = getCases();
+/* La maqueta pone cada frase en su propia línea dentro del paso. */
+const frases = (texto: string) =>
+  texto.split(/(?<=\.)\s+/).map((f) => f.trim()).filter(Boolean);
 ---
 <BaseLayout title="Casos de éxito | Tecno Experts"
             description="Casos reales de empresas ecuatorianas que transformaron sus crisis en resiliencia.">
-  <section class="hero">
+  <section class="hero hero-casos">
     <div class="hero-media">
       <img src="/img/hero/datacenter-pasillo.webp" alt="" width="1600" height="651" />
     </div>
     <div class="container hero-grid">
       <div class="hero-copy">
         <span class="kicker">Casos de éxito</span>
-        <h1>Los resultados hablan por nuestros <span class="accent">ingenieros.</span></h1>
+        <h1>Los resultados hablan<br />por nuestros <span class="accent">ingenieros.</span></h1>
         <div class="rule"></div>
-        <p class="lead">Casos reales de empresas ecuatorianas que transformaron sus crisis en resiliencia.</p>
+        <p class="lead">Casos reales de empresas ecuatorianas<br />que transformaron sus crisis en resiliencia.</p>
       </div>
     </div>
   </section>
@@ -36,15 +39,24 @@ const cases = getCases();
           <div class="case-steps">
             <div class="case-step">
               <span class="step-icon step-problem"><Icon name="alert" size={20} /></span>
-              <div><strong>Problema:</strong><p>{item.problem}</p></div>
+              <div>
+                <strong>Problema:</strong>
+                {frases(item.problem).map((f) => <p>{f}</p>)}
+              </div>
             </div>
             <div class="case-step">
               <span class="step-icon step-solution"><Icon name="gear" size={20} /></span>
-              <div><strong>Solución:</strong><p>{item.solution}</p></div>
+              <div>
+                <strong>Solución:</strong>
+                {frases(item.solution).map((f) => <p>{f}</p>)}
+              </div>
             </div>
             <div class="case-step">
               <span class="step-icon step-result"><Icon name="check-circle" size={20} /></span>
-              <div><strong>Resultado:</strong><p>{item.result}</p></div>
+              <div>
+                <strong>Resultado:</strong>
+                {frases(item.result).map((f) => <p>{f}</p>)}
+              </div>
             </div>
           </div>
         </article>
