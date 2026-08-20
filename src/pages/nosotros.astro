@@ -4,11 +4,11 @@ import Icon from '../components/Icon.astro';
 import { getPartners, getSetting, getTeam } from '../lib/db';
 const team = getTeam();
 const partners = getPartners();
-const isImage = (value?: string | null) => Boolean(value && value.includes('/'));
+const esImagen = (valor?: string | null) => Boolean(valor && valor.includes('/'));
 ---
 <BaseLayout title="Nosotros | Tecno Experts"
             description="Transformamos la tecnología en una ventaja medible y en resiliencia real para tu empresa.">
-  <section class="hero">
+  <section class="hero hero-nosotros">
     <div class="hero-media">
       <img src="/img/equipo/equipo-tecno-experts.webp" alt="Equipo técnico de Tecno Experts"
            width="1600" height="734" fetchpriority="high" />
@@ -17,7 +17,8 @@ const isImage = (value?: string | null) => Boolean(value && value.includes('/'))
       <div class="hero-copy">
         <span class="kicker">Sobre Tecno Experts</span>
         <h1>Expertos que resuelven, aliados <span class="accent">que permanecen.</span></h1>
-        <p class="lead">Transformamos la tecnología en una ventaja medible y en resiliencia real para tu empresa.</p>
+        <p class="lead">Transformamos la tecnología en una ventaja<br />medible y en resiliencia real para tu empresa.</p>
+        <div class="hero-marks" aria-hidden="true"><span></span><span></span><i></i></div>
       </div>
     </div>
   </section>
@@ -27,18 +28,22 @@ const isImage = (value?: string | null) => Boolean(value && value.includes('/'))
       <span class="kicker">Nuestra misión y visión</span>
       <div class="grid-2">
         <article class="card value-card">
-          <span class="icon-tile icon-tile-solid icon-tile-round"><Icon name="target" size={30} /></span>
+          <span class="icon-tile icon-tile-solid icon-tile-round"><Icon name="target" size={34} /></span>
           <div>
             <h2>Misión</h2>
             <div class="rule"></div>
             <p>{getSetting('mission')}</p>
+            <hr class="divider" />
+            <p>{getSetting('mission_extended')}</p>
           </div>
         </article>
         <article class="card value-card">
-          <span class="icon-tile icon-tile-solid icon-tile-round"><Icon name="flag-mountain" size={30} /></span>
+          <span class="icon-tile icon-tile-solid icon-tile-round"><Icon name="flag-mountain" size={34} /></span>
           <div>
             <h2>Visión 2028</h2>
             <div class="rule"></div>
+            <p>{getSetting('vision_intro')}</p>
+            <hr class="divider" />
             <p>{getSetting('vision')}</p>
           </div>
         </article>
@@ -48,7 +53,7 @@ const isImage = (value?: string | null) => Boolean(value && value.includes('/'))
 
   <section class="section section-soft">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head team-head">
         <span class="kicker">Nuestro equipo técnico</span>
         <h2>Conoce al equipo que protege tu operación.</h2>
         <p class="lead">Detrás de cada servidor en línea, hay un especialista de Tecno Experts.</p>
@@ -66,7 +71,7 @@ const isImage = (value?: string | null) => Boolean(value && value.includes('/'))
               <div class="role">{person.role}</div>
               <p>{person.description}</p>
               <div class="team-cert">
-                {isImage(person.certification_logo)
+                {esImagen(person.certification_logo)
                   ? <img src={person.certification_logo} alt="" loading="lazy" />
                   : person.certification_logo && <Icon name={person.certification_logo} size={38} stroke={1.5} />}
               </div>
@@ -80,14 +85,14 @@ const isImage = (value?: string | null) => Boolean(value && value.includes('/'))
   <section class="section">
     <div class="container">
       <span class="kicker">Certificaciones y partners</span>
-      <div class="card partner-inner" style="margin-top:6px;">
-        <div class="partner-logos" style="border-left:0;padding-left:0;">
-          {partners.map((partner) => (
-            partner.image_url
+      <div class="card partner-strip">
+        {partners.map((partner) => (
+          <div class="partner-cell">
+            {partner.image_url
               ? <img src={partner.image_url} alt={partner.name} loading="lazy" />
-              : <span>{partner.name}</span>
-          ))}
-        </div>
+              : <span>{partner.name}</span>}
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -96,8 +101,8 @@ const isImage = (value?: string | null) => Boolean(value && value.includes('/'))
     <div class="container">
       <div class="cta-banner">
         <div class="cta-content">
-          <h2>Hablemos sobre <span style="color:#7FB0F5">tu próximo proyecto.</span></h2>
-          <p>Estamos listos para ayudarte a llevar tu infraestructura al siguiente nivel.</p>
+          <h2>Hablemos sobre<br /><span class="accent-soft">tu próximo proyecto.</span></h2>
+          <p>Estamos listos para ayudarte a llevar tu<br />infraestructura al siguiente nivel.</p>
           <div class="cta-actions">
             <a class="btn btn-primary" href="/contacto">
               Hablemos sobre tu próximo proyecto <Icon name="arrow-right" size={16} stroke={2} />

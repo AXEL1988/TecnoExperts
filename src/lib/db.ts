@@ -286,6 +286,13 @@ const caseAssets: Array<[string, string]> = [
 const fillCase = db.prepare(`UPDATE success_cases SET image_url = COALESCE(NULLIF(image_url, ''), ?) WHERE sector = ?`);
 for (const [sector, image] of caseAssets) fillCase.run(image, sector);
 
+const ordenPartners: Array<[string, number]> = [
+  ['VMware', 1], ['Veeam', 2], ['HP', 3], ['Lenovo', 4],
+  ['ISO 27001', 5], ['Telefónica', 6], ['Claro', 7]
+];
+const fijarOrden = db.prepare(`UPDATE partners SET display_order = ? WHERE name = ? AND display_order <> ?`);
+for (const [nombre, orden] of ordenPartners) fijarOrden.run(orden, nombre, orden);
+
 const partnerAssets: Array<[string, string]> = [
   ['VMware', '/img/partners/vmware.png'],
   ['Veeam', '/img/partners/veeam.png'],
@@ -313,6 +320,8 @@ const settings = {
   why_title: 'Más que tecnología, somos tu aliado estratégico.',
   why_points: 'Ingenieros certificados con experiencia real\nEnfoque proactivo y preventivo\nMetodologías probadas y mejores prácticas\nAcompañamiento cercano y transparente',
   partner_intro: '10 años asegurando la continuidad de empresas AAA en Ecuador y Partners Oficiales de:',
+  mission_extended: 'Tecno Experts garantiza la continuidad operativa y la competitividad tecnológica de las organizaciones más exigentes del Ecuador. Lo hacemos con ingenieros certificados que diseñan, implementan y sostienen infraestructuras críticas, convirtiendo la tecnología en una ventaja real y medible para cada cliente.',
+  vision_intro: 'Ser la firma de infraestructura tecnológica y ciberseguridad de referencia en Ecuador, el socio estratégico definitivo que transforma la tecnología en resiliencia.',
   vision: 'Para 2028, ser la firma de infraestructura tecnológica y ciberseguridad de referencia en Ecuador, reconocida por las organizaciones líderes del país como el socio estratégico que transforma la tecnología en resiliencia empresarial.'
 };
 const setSetting = db.prepare(`INSERT INTO site_settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO NOTHING`);
