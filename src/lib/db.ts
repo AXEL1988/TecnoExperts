@@ -147,9 +147,18 @@ if (serviceCount === 0) {
 }
 
 const seedCases = [
-  ['Sector Financiero', 'Sector Financiero', 'Fallo crítico en arreglo RAID 5 degradado. Core financiero colapsado.', 'Activación inmediata de DRP. Recuperación desde backup inmutable Veeam.', 'Restauración total en 6h 45min. Cero pérdida de transacciones.', 1],
-  ['Telecomunicaciones', 'Telecomunicaciones', 'RTO inaceptable de 48 horas y altos costos de energía.', 'Consolidación mediante VMware vSphere y contingencia.', '340 VMs migradas sin afectar servicio. RTO de 4h. Gasto físico reducido un 23%.', 2],
-  ['Manufactura', 'Manufactura', 'Dependencia de servidores físicos legacy a punto de fallar.', 'Migración a entorno virtual VMware en infraestructura Lenovo.', 'Alta disponibilidad activa. La operación no sufrió downtime ante una falla posterior.', 3]
+  ['Sector Financiero: Vanguardia y Respaldo Experto', 'Sector Financiero',
+   'Mantenerse a la vanguardia tecnológica mientras la organización se enfoca exclusivamente en su core de negocio y expansión.',
+   'Renovación estratégica de licenciamiento VMware y gestión integral de virtualización.',
+   'Operación estable, eficiente y respaldada por expertos.', 1],
+  ['Telecomunicaciones: Transformación en Virtualización', 'Telecomunicaciones',
+   'Modernizar su centro de datos para aumentar la agilidad y ofrecer servicios de vanguardia.',
+   'Implementación de un entorno simplificado, seguro y optimizado bajo los estándares de VMware.',
+   'Liderazgo tecnológico y alta disponibilidad operativa.', 2],
+  ['Manufactura: Resiliencia ante la Crisis', 'Manufactura',
+   'Incidente crítico de ciberseguridad que paralizó la infraestructura total.',
+   'Rediseño absoluto desde cero de la arquitectura de virtualización. Despliegue de un directorio activo seguro y establecimiento de un sitio alterno para contingencia.',
+   'Recuperación técnica estandarizada y eficiente sobre una infraestructura resiliente.', 3]
 ];
 if (db.prepare('SELECT COUNT(*) as count FROM success_cases').get().count === 0) {
   const insert = db.prepare(`
@@ -161,9 +170,9 @@ if (db.prepare('SELECT COUNT(*) as count FROM success_cases').get().count === 0)
 }
 
 const seedTeam = [
-  ['Francisco Silva', 'VMware Certified Professional', 'Arquitectura de virtualización. Maestro en consolidación de Data Centers y alta disponibilidad.', null, 1],
-  ['Fabián Quimbiulco', 'Veeam VMCE', 'Especialista en continuidad de negocio. Garantiza que los datos estén intactos y operativos.', null, 2],
-  ['Christian Baeza', 'Cloud & Security Specialist', 'Ciberseguridad. Blinda perímetros, segmenta redes y diseña estrategias Zero Trust.', null, 3],
+  ['Francisco Silva', 'Especialista VMware', 'Arquitectura de virtualización. Especialista en consolidación de Data Centers y alta disponibilidad.', null, 1],
+  ['Fabián Quimbiulco', 'Especialista Veeam, Microsoft e Infraestructura', 'Especialista en continuidad de negocio. Garantiza que los datos estén intactos y operativos.', null, 2],
+  ['Daniel Arroyo', 'Marketing', 'Comunicación y gestión de marca. Acerca las soluciones de Tecno Experts a las empresas que las necesitan.', null, 3],
   ['Irene Sarabia', 'Key Account Manager (KAM)', 'Gestión de clientes y preventa comercial. Tu aliada directa para presupuestos rápidos y transparentes.', null, 4]
 ];
 if (db.prepare('SELECT COUNT(*) as count FROM team_members').get().count === 0) {
@@ -173,7 +182,7 @@ if (db.prepare('SELECT COUNT(*) as count FROM team_members').get().count === 0) 
 }
 
 const seedPartners = [
-  ['VMware', 1], ['Veeam', 2], ['HP', 3], ['Lenovo', 4], ['Telefónica', 5], ['Claro', 6]
+  ['VMware', 1], ['Proxmox', 2], ['Veeam', 3], ['Microsoft', 4], ['Dell', 5]
 ];
 if (db.prepare('SELECT COUNT(*) as count FROM partners').get().count === 0) {
   const insert = db.prepare(`INSERT INTO partners (name, display_order) VALUES (?, ?)`);
@@ -202,6 +211,12 @@ const partnerScopeIsNew = addColumn('partners', 'show_in_home', 'INTEGER NOT NUL
 if (partnerScopeIsNew) {
   db.prepare(`UPDATE partners SET show_in_home = 0 WHERE name = ?`).run('ISO 27001');
 }
+// Revisión del cliente: los partners se agrupan por especialidad en la barra de confianza.
+addColumn('partners', 'category', 'TEXT');
+// Casos de éxito: cliente y bloque de cierre (valor agregado, testimonio o lección).
+addColumn('success_cases', 'client_label', 'TEXT');
+addColumn('success_cases', 'highlight', 'TEXT');
+addColumn('success_cases', 'highlight_label', 'TEXT');
 
 // Assets del cliente: se aplican solo si el registro aún no tiene imagen propia.
 const serviceAssets: Array<[string, string, string]> = [
@@ -219,7 +234,7 @@ for (const [slug, image, icon] of serviceAssets) fillService.run(image, icon, sl
 const beneficios: Array<[string, string, string]> = [
   ['virtualizacion-vmware',
    'Consolida tu infraestructura física, reduce costos operativos y eleva la disponibilidad de tus sistemas críticos.',
-   'Consolida tu infraestructura física, reduce costos operativos y eleva la disponibilidad de tus sistemas críticos a un 99.99%.'],
+   'Consolida tu infraestructura física, reduce costos operativos y eleva la disponibilidad de tus sistemas críticos a un 99.90%.'],
   ['backup-recuperacion-veeam',
    'Backups inmutables, restauraciones en minutos y protección contra ransomware.',
    'Backups inmutables, restauraciones en minutos y protección contra ransomware. Tu seguro de vida digital.'],
@@ -232,6 +247,13 @@ const beneficios: Array<[string, string, string]> = [
 ];
 const corregirBeneficio = db.prepare(`UPDATE services SET short_description = ? WHERE slug = ? AND short_description = ?`);
 for (const [slug, anterior, nuevo] of beneficios) corregirBeneficio.run(nuevo, slug, anterior);
+
+// Revisión del cliente: la disponibilidad comprometida es 99.90%, no 99.99%.
+corregirBeneficio.run(
+  'Consolida tu infraestructura física, reduce costos operativos y eleva la disponibilidad de tus sistemas críticos a un 99.90%.',
+  'virtualizacion-vmware',
+  'Consolida tu infraestructura física, reduce costos operativos y eleva la disponibilidad de tus sistemas críticos a un 99.99%.'
+);
 
 // Texto del botón según la maqueta.
 db.prepare(`UPDATE services SET cta_text = ? WHERE slug = ? AND cta_text = ?`)
@@ -267,6 +289,35 @@ const fillTeam = db.prepare(`
 `);
 for (const [name, photo, cert] of teamAssets) fillTeam.run(photo, cert, name);
 
+// Revisión del cliente: entra Daniel Arroyo (marketing) y sale Christian Baeza.
+db.prepare(`
+  INSERT INTO team_members (name, role, description, certification_logo, display_order)
+  SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM team_members WHERE name = ?)
+`).run('Daniel Arroyo', 'Marketing',
+       'Comunicación y gestión de marca. Acerca las soluciones de Tecno Experts a las empresas que las necesitan.',
+       'users', 3, 'Daniel Arroyo');
+db.prepare(`UPDATE team_members SET is_active = 0 WHERE name = ? AND is_active = 1`).run('Christian Baeza');
+db.prepare(`UPDATE team_members SET display_order = 4 WHERE name = ? AND display_order = 3`).run('Irene Sarabia');
+
+// «Maestro» pasa a «Especialista» y se declara la certificación de cada quien.
+const teamFixes: Array<[string, string, string]> = [
+  ['Francisco Silva', 'role', 'Especialista VMware'],
+  ['Francisco Silva', 'description', 'Arquitectura de virtualización. Especialista en consolidación de Data Centers y alta disponibilidad.'],
+  ['Fabián Quimbiulco', 'role', 'Especialista Veeam, Microsoft e Infraestructura']
+];
+const corregirRol = db.prepare(`UPDATE team_members SET role = ? WHERE name = ? AND role = ?`);
+const corregirDescripcion = db.prepare(`UPDATE team_members SET description = ? WHERE name = ? AND description = ?`);
+const teamPrevios: Record<string, string> = {
+  'Francisco Silva|role': 'VMware Certified Professional',
+  'Francisco Silva|description': 'Arquitectura de virtualización. Maestro en consolidación de Data Centers y alta disponibilidad.',
+  'Fabián Quimbiulco|role': 'Veeam VMCE'
+};
+for (const [name, campo, nuevo] of teamFixes) {
+  const anterior = teamPrevios[`${name}|${campo}`];
+  if (campo === 'role') corregirRol.run(nuevo, name, anterior);
+  else corregirDescripcion.run(nuevo, name, anterior);
+}
+
 const caseIcons: Array<[string, string]> = [
   ['Sector Financiero', 'bank'],
   ['Telecomunicaciones', 'antenna'],
@@ -276,17 +327,32 @@ const fillCaseIcon = db.prepare(`UPDATE success_cases SET icon_name = COALESCE(N
 for (const [sector, icon] of caseIcons) fillCaseIcon.run(icon, sector);
 
 const seedStats: Array<[string, string, string, number]> = [
-  ['10+', 'Años protegiendo empresas en Ecuador', 'shield', 1],
-  ['200+', 'Proyectos de seguridad implementados', 'users', 2],
-  ['30+', 'Certificaciones y alianzas tecnológicas', 'medal', 3],
-  ['50+', 'Empresas confían en nuestras soluciones', 'building', 4],
-  ['99.99%', 'Disponibilidad promedio en nuestros proyectos', 'clock', 5]
+  ['200+', 'Proyectos de infraestructura implementados', 'users', 1],
+  ['90+', 'Empresas confían en nuestras soluciones', 'building', 2],
+  ['99.90%', 'Disponibilidad operativa garantizada', 'clock', 3]
 ];
 if (db.prepare('SELECT COUNT(*) as count FROM stats').get().count === 0) {
   const insert = db.prepare(`INSERT INTO stats (value, label, icon_name, display_order) VALUES (?, ?, ?, ?)`);
   const tx = db.transaction((rows: typeof seedStats) => rows.forEach((row) => insert.run(...row)));
   tx(seedStats);
 }
+
+// Revisión del cliente: la barra baja a tres cifras y cambia sus etiquetas.
+const statFixes: Array<[string, string, string, string, string, number]> = [
+  ['200+', 'Proyectos de seguridad implementados', '200+', 'Proyectos de infraestructura implementados', 'users', 1],
+  ['50+', 'Empresas confían en nuestras soluciones', '90+', 'Empresas confían en nuestras soluciones', 'building', 2],
+  ['99.99%', 'Disponibilidad promedio en nuestros proyectos', '99.90%', 'Disponibilidad operativa garantizada', 'clock', 3]
+];
+const corregirStat = db.prepare(`
+  UPDATE stats SET value = ?, label = ?, icon_name = ?, display_order = ?
+  WHERE value = ? AND label = ?
+`);
+for (const [valorAnterior, etiquetaAnterior, valor, etiqueta, icono, orden] of statFixes) {
+  corregirStat.run(valor, etiqueta, icono, orden, valorAnterior, etiquetaAnterior);
+}
+const retirarStat = db.prepare(`UPDATE stats SET is_active = 0 WHERE value = ? AND label = ? AND is_active = 1`);
+retirarStat.run('10+', 'Años protegiendo empresas en Ecuador');
+retirarStat.run('30+', 'Certificaciones y alianzas tecnológicas');
 
 const seedResources: Array<[string, string, string, string, number]> = [
   ['Casos de Éxito', '/casos', 'Resultados medibles en clientes reales.', 'medal', 1],
@@ -307,40 +373,126 @@ const caseAssets: Array<[string, string]> = [
 const fillCase = db.prepare(`UPDATE success_cases SET image_url = COALESCE(NULLIF(image_url, ''), ?) WHERE sector = ?`);
 for (const [sector, image] of caseAssets) fillCase.run(image, sector);
 
+// Revisión del cliente: los tres casos se reescriben con el relato entregado.
+// Se aplica por sector y solo si el texto sigue siendo el anterior.
+const caseRewrites: Array<{
+  sector: string; title: [string, string]; problem: [string, string];
+  solution: [string, string]; result: [string, string];
+}> = [
+  {
+    sector: 'Sector Financiero',
+    title: ['Sector Financiero', 'Sector Financiero: Vanguardia y Respaldo Experto'],
+    problem: ['Fallo crítico en arreglo RAID 5 degradado. Core financiero colapsado.',
+              'Mantenerse a la vanguardia tecnológica mientras la organización se enfoca exclusivamente en su core de negocio y expansión.'],
+    solution: ['Activación inmediata de DRP. Recuperación desde backup inmutable Veeam.',
+               'Renovación estratégica de licenciamiento VMware y gestión integral de virtualización.'],
+    result: ['Restauración total en 6h 45min. Cero pérdida de transacciones.',
+             'Operación estable, eficiente y respaldada por expertos.']
+  },
+  {
+    sector: 'Telecomunicaciones',
+    title: ['Telecomunicaciones', 'Telecomunicaciones: Transformación en Virtualización'],
+    problem: ['RTO inaceptable de 48 horas y altos costos de energía.',
+              'Modernizar su centro de datos para aumentar la agilidad y ofrecer servicios de vanguardia.'],
+    solution: ['Consolidación mediante VMware vSphere y contingencia.',
+               'Implementación de un entorno simplificado, seguro y optimizado bajo los estándares de VMware.'],
+    result: ['340 VMs migradas sin afectar servicio. RTO de 4h. Gasto físico reducido un 23%.',
+             'Liderazgo tecnológico y alta disponibilidad operativa.']
+  },
+  {
+    sector: 'Manufactura',
+    title: ['Manufactura', 'Manufactura: Resiliencia ante la Crisis'],
+    problem: ['Dependencia de servidores físicos legacy a punto de fallar.',
+              'Incidente crítico de ciberseguridad que paralizó la infraestructura total.'],
+    solution: ['Migración a entorno virtual VMware en infraestructura Lenovo.',
+               'Rediseño absoluto desde cero de la arquitectura de virtualización. Despliegue de un directorio activo seguro y establecimiento de un sitio alterno para contingencia.'],
+    result: ['Alta disponibilidad activa. La operación no sufrió downtime ante una falla posterior.',
+             'Recuperación técnica estandarizada y eficiente sobre una infraestructura resiliente.']
+  }
+];
+const reescribirCaso = (campo: 'title' | 'problem' | 'solution' | 'result') =>
+  db.prepare(`UPDATE success_cases SET ${campo} = ? WHERE sector = ? AND ${campo} = ?`);
+const reescrituras = {
+  title: reescribirCaso('title'),
+  problem: reescribirCaso('problem'),
+  solution: reescribirCaso('solution'),
+  result: reescribirCaso('result')
+};
+for (const caso of caseRewrites) {
+  for (const campo of ['title', 'problem', 'solution', 'result'] as const) {
+    const [anterior, nuevo] = caso[campo];
+    reescrituras[campo].run(nuevo, caso.sector, anterior);
+  }
+}
+
+// Cliente y bloque de cierre de cada caso (valor agregado, testimonio o lección).
+const caseExtras: Array<[string, string, string, string]> = [
+  ['Sector Financiero', 'Importante Cooperativa del sector financiero.', 'El valor agregado',
+   'Actuamos como su brazo tecnológico. Especialistas asignados: Francisco (VMware) y Fabián (Especialista en Infraestructura).'],
+  ['Telecomunicaciones', 'Empresa líder en telecomunicaciones.', 'Testimonio',
+   '«Gracias al equipo de especialistas de virtualización de Tecno Experts, transformamos nuestro centro de datos. Ahora podemos ofrecer a nuestros clientes una plataforma de nube bajo demanda, con capacidades multi-tenant y redes definidas por software.»'],
+  ['Manufactura', 'Empresa referente en el sector manufactura.', 'La lección',
+   'La continuidad no es un producto, es un diseño. Una infraestructura resiliente permite una recuperación técnica estandarizada y eficiente.']
+];
+const fillCaseExtras = db.prepare(`
+  UPDATE success_cases
+     SET client_label = COALESCE(NULLIF(client_label, ''), ?),
+         highlight_label = COALESCE(NULLIF(highlight_label, ''), ?),
+         highlight = COALESCE(NULLIF(highlight, ''), ?)
+   WHERE sector = ?
+`);
+for (const [sector, cliente, etiqueta, texto] of caseExtras) fillCaseExtras.run(cliente, etiqueta, texto, sector);
+
 const ordenPartners: Array<[string, number]> = [
-  ['VMware', 1], ['Veeam', 2], ['HP', 3], ['Lenovo', 4],
-  ['ISO 27001', 5], ['Telefónica', 6], ['Claro', 7]
+  ['VMware', 1], ['Proxmox', 2], ['Veeam', 3], ['Microsoft', 4], ['Dell', 5]
 ];
 const fijarOrden = db.prepare(`UPDATE partners SET display_order = ? WHERE name = ? AND display_order <> ?`);
 for (const [nombre, orden] of ordenPartners) fijarOrden.run(orden, nombre, orden);
 
+// Proxmox, Microsoft y Dell todavía no tienen logo oficial: se muestran como texto.
 const partnerAssets: Array<[string, string]> = [
   ['VMware', '/img/partners/vmware.png'],
-  ['Veeam', '/img/partners/veeam.png'],
-  ['HP', '/img/partners/hp.png'],
-  ['Lenovo', '/img/partners/lenovo.png'],
-  ['Telefónica', '/img/partners/telefonica.png'],
-  ['Claro', '/img/partners/claro.png'],
-  ['ISO 27001', '/img/partners/iso-27001.png']
+  ['Veeam', '/img/partners/veeam.png']
 ];
 const fillPartner = db.prepare(`UPDATE partners SET image_url = COALESCE(NULLIF(image_url, ''), ?) WHERE name = ?`);
 for (const [name, image] of partnerAssets) fillPartner.run(image, name);
 
-if (!db.prepare('SELECT 1 FROM partners WHERE name = ?').get('ISO 27001')) {
-  db.prepare(`INSERT INTO partners (name, image_url, display_order, show_in_home) VALUES (?, ?, ?, 0)`)
-    .run('ISO 27001', '/img/partners/iso-27001.png', 7);
-}
+// Revisión del cliente: solo quedan los mayoristas, agrupados por especialidad.
+const partnerCategories: Array<[string, string]> = [
+  ['VMware', 'Especialistas en Virtualización'],
+  ['Proxmox', 'Especialistas en Virtualización'],
+  ['Veeam', 'Especialistas en Respaldo y Continuidad'],
+  ['Microsoft', 'Infraestructura, Nube y Soporte'],
+  ['Dell', 'Infraestructura, Nube y Soporte']
+];
+const nuevoPartner = db.prepare(`
+  INSERT INTO partners (name, display_order, category)
+  SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM partners WHERE name = ?)
+`);
+const fijarCategoria = db.prepare(`UPDATE partners SET category = COALESCE(NULLIF(category, ''), ?) WHERE name = ?`);
+partnerCategories.forEach(([name, category], index) => {
+  nuevoPartner.run(name, index + 1, category, name);
+  fijarCategoria.run(category, name);
+});
+
+// Marcas retiradas del sitio: se desactivan en vez de borrarse, para no perder ediciones.
+const partnersRetirados = ['HP', 'Lenovo', 'Telefónica', 'Claro', 'ISO 27001'];
+const desactivarPartner = db.prepare(`UPDATE partners SET is_active = 0 WHERE name = ? AND is_active = 1`);
+for (const name of partnersRetirados) desactivarPartner.run(name);
 
 const settings = {
   hero_title: 'Infraestructura que no falla. Equipo que no abandona.',
   hero_subtitle: 'Diseñamos, implementamos y sostenemos infraestructuras críticas y virtualización para las organizaciones más exigentes del Ecuador. Respuesta segura, garantizada por ingenieros certificados.',
-  company_email: 'irene@tecno-experts.com',
-  whatsapp_url: 'https://wa.me/',
-  phone: '+593',
+  company_email: 'isarabia@tecno-experts.com',
+  whatsapp_url: 'https://wa.me/593994977417',
+  phone: '0994977417',
   mission: 'Garantizar la continuidad operativa y la competitividad tecnológica de las organizaciones más exigentes del Ecuador mediante ingenieros certificados.',
   why_title: 'Más que tecnología, somos tu aliado estratégico.',
   why_points: 'Ingenieros certificados con experiencia real\nEnfoque proactivo y preventivo\nMetodologías probadas y mejores prácticas\nAcompañamiento cercano y transparente',
-  partner_intro: '10 años asegurando la continuidad de empresas AAA en Ecuador y Partners Oficiales de:',
+  partner_intro: 'Durante estos 10 años hemos prestado soluciones de arquitectura tecnológica a empresas privadas y públicas a través de la implementación, renovación o migración de soluciones sobre infraestructura, nube, virtualización y continuidad del negocio; con una atención presencial y remota. Contamos con más de 200 proyectos de infraestructura implementados y una garantía de 99.90% de disponibilidad operativa.',
+  partner_lead: 'Para garantizar la excelencia tecnológica, trabajamos con líderes de la industria clasificados por especialidad:',
+  services_intro: 'La continuidad operativa es la base de tu negocio. Brindamos infraestructura tecnológica segura para empresas que no pueden detener su operación. Implementamos virtualización, ciberseguridad, respaldo, nube híbrida y soporte especializado para empresas en Ecuador.',
+  contact_pitch: '¿Tu arquitectura garantiza la recuperación total? Solicita un diagnóstico técnico de continuidad. Sin compromiso.',
   mission_extended: 'Tecno Experts garantiza la continuidad operativa y la competitividad tecnológica de las organizaciones más exigentes del Ecuador. Lo hacemos con ingenieros certificados que diseñan, implementan y sostienen infraestructuras críticas, convirtiendo la tecnología en una ventaja real y medible para cada cliente.',
   vision_intro: 'Ser la firma de infraestructura tecnológica y ciberseguridad de referencia en Ecuador, el socio estratégico definitivo que transforma la tecnología en resiliencia.',
   vision: 'Para 2028, ser la firma de infraestructura tecnológica y ciberseguridad de referencia en Ecuador, reconocida por las organizaciones líderes del país como el socio estratégico que transforma la tecnología en resiliencia empresarial.'
@@ -353,7 +505,14 @@ for (const [key, value] of Object.entries(settings)) setSetting.run(key, value);
 const textFixes: Array<[string, string, string]> = [
   ['hero_subtitle',
    'Diseñamos, implementamos y sostenemos infraestructuras críticas y virtualización para las organizaciones más exigentes del Ecuador.',
-   settings.hero_subtitle]
+   settings.hero_subtitle],
+  // Revisión del cliente: barra de confianza y datos de contacto reales.
+  ['partner_intro',
+   '10 años asegurando la continuidad de empresas AAA en Ecuador y Partners Oficiales de:',
+   settings.partner_intro],
+  ['company_email', 'irene@tecno-experts.com', settings.company_email],
+  ['whatsapp_url', 'https://wa.me/', settings.whatsapp_url],
+  ['phone', '+593', settings.phone]
 ];
 const fixSetting = db.prepare(`UPDATE site_settings SET value = ? WHERE key = ? AND value = ?`);
 for (const [key, previous, next] of textFixes) fixSetting.run(next, key, previous);

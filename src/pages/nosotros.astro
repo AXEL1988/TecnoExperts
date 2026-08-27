@@ -4,6 +4,14 @@ import Icon from '../components/Icon.astro';
 import { getPartners, getSetting, getTeam } from '../lib/db';
 const team = getTeam();
 const partners = getPartners();
+/* Mismo agrupado por especialidad que la barra de confianza de la portada. */
+const partnerGroups = partners.reduce((groups: Array<{ category: string; items: typeof partners }>, partner) => {
+  const category = partner.category ?? '';
+  const group = groups.find((item) => item.category === category);
+  if (group) group.items.push(partner);
+  else groups.push({ category, items: [partner] });
+  return groups;
+}, []);
 const esImagen = (valor?: string | null) => Boolean(valor && valor.includes('/'));
 ---
 <BaseLayout title="Nosotros | Tecno Experts"
@@ -32,8 +40,6 @@ const esImagen = (valor?: string | null) => Boolean(valor && valor.includes('/')
           <div>
             <h2>Misión</h2>
             <div class="rule"></div>
-            <p>{getSetting('mission')}</p>
-            <hr class="divider" />
             <p>{getSetting('mission_extended')}</p>
           </div>
         </article>
@@ -42,8 +48,6 @@ const esImagen = (valor?: string | null) => Boolean(valor && valor.includes('/')
           <div>
             <h2>Visión 2028</h2>
             <div class="rule"></div>
-            <p>{getSetting('vision_intro')}</p>
-            <hr class="divider" />
             <p>{getSetting('vision')}</p>
           </div>
         </article>
@@ -85,12 +89,18 @@ const esImagen = (valor?: string | null) => Boolean(valor && valor.includes('/')
   <section class="section">
     <div class="container">
       <span class="kicker">Certificaciones y partners</span>
+      <p class="partner-lead">{getSetting('partner_lead')}</p>
       <div class="card partner-strip">
-        {partners.map((partner) => (
+        {partnerGroups.map((group) => (
           <div class="partner-cell">
-            {partner.image_url
-              ? <img src={partner.image_url} alt={partner.name} loading="lazy" />
-              : <span>{partner.name}</span>}
+            {group.category && <span class="partner-group-label">{group.category}</span>}
+            <div class="partner-logos">
+              {group.items.map((partner) => (
+                partner.image_url
+                  ? <img src={partner.image_url} alt={partner.name} loading="lazy" />
+                  : <span class="partner-name">{partner.name}</span>
+              ))}
+            </div>
           </div>
         ))}
       </div>

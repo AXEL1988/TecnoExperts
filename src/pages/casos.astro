@@ -35,6 +35,7 @@ const frases = (texto: string) =>
           <div class="case-title">
             <h2>{item.title}</h2>
             <div class="rule"></div>
+            {item.client_label && <p class="case-client"><strong>Cliente:</strong> {item.client_label}</p>}
           </div>
           <div class="case-steps">
             <div class="case-step">
@@ -59,6 +60,15 @@ const frases = (texto: string) =>
               </div>
             </div>
           </div>
+          {item.highlight && (
+            <div class="case-highlight">
+              <span class="step-icon step-solution"><Icon name="medal" size={22} /></span>
+              <div>
+                <strong>{item.highlight_label ?? 'El valor agregado'}:</strong>
+                <p>{item.highlight}</p>
+              </div>
+            </div>
+          )}
         </article>
       ))}
     </div>

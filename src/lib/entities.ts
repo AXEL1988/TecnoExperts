@@ -72,6 +72,9 @@ export const entities: Record<string, EntityDef> = {
       { name: 'problem', label: 'Problema', type: 'textarea', required: true, full: true },
       { name: 'solution', label: 'Solución', type: 'textarea', required: true, full: true },
       { name: 'result', label: 'Resultado', type: 'textarea', required: true, full: true },
+      { name: 'client_label', label: 'Cliente', full: true },
+      { name: 'highlight_label', label: 'Título del cierre', default: 'El valor agregado' },
+      { name: 'highlight', label: 'Cierre (valor agregado, testimonio o lección)', type: 'textarea', full: true },
       { name: 'image_url', label: 'Imagen (ruta o URL)', type: 'url' },
       { name: 'icon_name', label: 'Icono de sector', default: 'building' },
       orderField,
@@ -135,6 +138,7 @@ export const entities: Record<string, EntityDef> = {
     hasUpdatedAt: false,
     fields: [
       { name: 'name', label: 'Nombre', required: true },
+      { name: 'category', label: 'Especialidad (agrupa los logos)', full: true },
       { name: 'image_url', label: 'URL del logo', type: 'url' },
       { name: 'url', label: 'Sitio web', type: 'url' },
       { name: 'show_in_home', label: 'Barra de portada', type: 'select', numeric: true, default: '1',

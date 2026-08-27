@@ -29,7 +29,22 @@
 - Desplegables de Soluciones (dinámico) y Recursos (editable) en la navegación.
 - Adaptable verificado de 360px a 1440px, sin desbordes horizontales.
 
-## Fase 5
+## Fase 5 — revisión del cliente (implementada)
+- Barra de confianza con solo mayoristas, agrupados por especialidad.
+- Textos de portada, misión/visión, casos de éxito y contacto según el documento de revisión.
+- Barra de estadísticas reducida a tres cifras (200+, 90+, 99.90%).
+- Soluciones sin acordeón: CTA visible en cada servicio y botón flotante de cotización.
+- Equipo: entra Daniel Arroyo (marketing), sale Christian Baeza.
+
+## Pendiente de material del cliente
+- Logos oficiales de **Proxmox, Microsoft y Dell**: hoy se muestran como texto en la barra de
+  confianza. Basta con dejar los archivos en `public/img/partners/` y asignarlos desde
+  `/admin/partners` o en las semillas de `src/lib/db.ts`.
+- Reemplazar las **imágenes generadas con IA** por fotografía real en `public/img/hero/`,
+  `public/img/servicios/` y `public/img/casos/`.
+- Foto de **Daniel Arroyo** para `public/img/equipo/`.
+
+## Fase 6
 - Reemplazar el logo SVG por el vectorial oficial de marca.
 - Media manager / uploads desde el panel.
 - SEO editable y gestión de solicitudes.

@@ -24,7 +24,7 @@ const whatsapp = getSetting('whatsapp_url');
   <section class="section">
     <div class="container">
       {services.map((service, index) => (
-        <article class={`card solution-item ${index === 0 ? 'open' : ''}`} data-solution>
+        <article class="card solution-item">
           <div class="solution-row">
             <span class="solution-brand">
               {service.icon_url && <img src={service.icon_url} alt={service.title} loading="lazy" />}
@@ -47,10 +47,6 @@ const whatsapp = getSetting('whatsapp_url');
               </figure>
             )}
           </div>
-          <button class="solution-toggle" aria-expanded={index === 0 ? 'true' : 'false'}
-                  aria-label={`Ver ${service.title}`}>
-            <Icon name={index === 0 ? 'minus' : 'plus'} size={19} stroke={2.4} />
-          </button>
         </article>
       ))}
     </div>
@@ -78,24 +74,8 @@ const whatsapp = getSetting('whatsapp_url');
     </div>
   </section>
 
-  <script>
-    document.querySelectorAll('[data-solution]').forEach((item) => {
-      const head = item.querySelector('.solution-toggle');
-      head?.addEventListener('click', () => {
-        const isOpen = item.classList.contains('open');
-        document.querySelectorAll('[data-solution]').forEach((other) => {
-          other.classList.remove('open');
-          other.querySelector('.solution-toggle')?.setAttribute('aria-expanded', 'false');
-          const icon = other.querySelector('.solution-toggle svg');
-          if (icon) icon.innerHTML = '<path d="M12 5v14M5 12h14"/>';
-        });
-        if (!isOpen) {
-          item.classList.add('open');
-          head.setAttribute('aria-expanded', 'true');
-          const icon = item.querySelector('.solution-toggle svg');
-          if (icon) icon.innerHTML = '<path d="M5 12h14"/>';
-        }
-      });
-    });
-  </script>
+  <a class="btn btn-primary quote-fab" href="/contacto" aria-label="Solicitar cotización">
+    <Icon name="doc" size={19} />
+    <span>Solicitar cotización</span>
+  </a>
 </BaseLayout>

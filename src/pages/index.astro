@@ -9,6 +9,14 @@ const monocromos = new Set(['/img/partners/vmware.png']);
 const services = getServices();
 const homeServices = services.slice(0, 3);
 const partners = getPartners(true, true);
+/* La barra de confianza agrupa a los mayoristas por especialidad, como pidió el cliente. */
+const partnerGroups = partners.reduce((groups: Array<{ category: string; items: typeof partners }>, partner) => {
+  const category = partner.category ?? '';
+  const group = groups.find((item) => item.category === category);
+  if (group) group.items.push(partner);
+  else groups.push({ category, items: [partner] });
+  return groups;
+}, []);
 const stats = getStats();
 const team = getTeam();
 const heroTitle = getSetting('hero_title');
@@ -48,12 +56,22 @@ const [titleLead, ...titleRest] = heroTitle.split('.').filter((part) => part.tri
   <div class="container partner-bar">
     <div class="partner-inner">
       <p class="partner-intro">{getSetting('partner_intro')}</p>
-      <div class="partner-logos">
-        {partners.map((partner) => (
-          partner.image_url
-            ? <img src={partner.image_url} alt={partner.name} loading="lazy" />
-            : <span>{partner.name}</span>
-        ))}
+      <div class="partner-groups">
+        <p class="partner-lead">{getSetting('partner_lead')}</p>
+        <div class="partner-columns">
+          {partnerGroups.map((group) => (
+            <div class="partner-group">
+              {group.category && <span class="partner-group-label">{group.category}</span>}
+              <div class="partner-logos">
+                {group.items.map((partner) => (
+                  partner.image_url
+                    ? <img src={partner.image_url} alt={partner.name} loading="lazy" />
+                    : <span class="partner-name">{partner.name}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </div>
@@ -64,6 +82,7 @@ const [titleLead, ...titleRest] = heroTitle.split('.').filter((part) => part.tri
         <span class="kicker">La continuidad operativa no es un lujo</span>
         <h2>Es la base de tu negocio.</h2>
         <div class="rule"></div>
+        <p class="services-intro">{getSetting('services_intro')}</p>
       </div>
       <div class="grid-3">
         {homeServices.map((service, index) => (

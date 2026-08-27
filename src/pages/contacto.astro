@@ -4,8 +4,13 @@ import Icon from '../components/Icon.astro';
 import { getSetting, getTeam } from '../lib/db';
 const whatsapp = getSetting('whatsapp_url');
 const email = getSetting('company_email');
+const phone = getSetting('phone');
+const pitch = getSetting('contact_pitch');
+const team = getTeam();
 /* La KAM del equipo encabeza la atención inmediata, como en la maqueta. */
-const kam = getTeam().find((person) => person.role.includes('KAM')) ?? null;
+const kam = team.find((person) => person.role.includes('KAM')) ?? null;
+/* Marketing acompaña a la KAM en los datos de contacto directo. */
+const marketing = team.find((person) => person.role.toLowerCase().includes('marketing')) ?? null;
 ---
 <BaseLayout title="Contacto | Tecno Experts"
             description="Solicita un diagnóstico, pide una cotización o resuelve una duda urgente.">
@@ -17,7 +22,7 @@ const kam = getTeam().find((person) => person.role.includes('KAM')) ?? null;
       <div class="hero-copy">
         <div class="rule"></div>
         <h1>Hablemos de tu <span class="accent">infraestructura.</span></h1>
-        <p class="lead">Solicita un diagnóstico, pide una cotización o resuelve una duda urgente.</p>
+        <p class="lead">{pitch}</p>
         <div class="hero-badges">
           <div class="hero-badge">
             <span class="icon-tile"><Icon name="shield-check" size={21} /></span>
@@ -107,8 +112,26 @@ const kam = getTeam().find((person) => person.role.includes('KAM')) ?? null;
         <div class="contact-lines">
           <div class="contact-line">
             <Icon name="mail" size={22} />
-            <div><strong>{email}</strong><span>Respuesta rápida garantizada.</span></div>
+            <div>
+              <strong><a href={`mailto:${email}`}>{email}</a></strong>
+              <span>{kam ? `${kam.name} · Ventas` : 'Respuesta rápida garantizada.'}</span>
+            </div>
           </div>
+          {phone && (
+            <div class="contact-line">
+              <Icon name="whatsapp" size={22} />
+              <div>
+                <strong><a href={`tel:+593${phone.replace(/^0/, '')}`}>{phone}</a></strong>
+                <span>Atención directa en horario laboral.</span>
+              </div>
+            </div>
+          )}
+          {marketing && (
+            <div class="contact-line">
+              <Icon name="users" size={22} />
+              <div><strong>{marketing.name}</strong><span>{marketing.role} · contacto de gestión.</span></div>
+            </div>
+          )}
           <div class="contact-line">
             <Icon name="shield-check" size={22} />
             <div><strong>Atención confidencial</strong><span>y segura.</span></div>
