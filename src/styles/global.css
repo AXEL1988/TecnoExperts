@@ -211,14 +211,14 @@ p { margin: 0 0 14px; }
 .partner-groups { flex: 1; min-width: 0; border-left: 1px solid var(--line); padding-left: 30px; }
 .partner-lead { font-size: .92rem; color: var(--muted); margin: 0 0 18px; }
 /* Los mayoristas van al costado del texto, en columnas por especialidad. */
-.partner-columns { display: flex; flex-wrap: wrap; gap: 26px 34px; align-items: flex-start; }
-.partner-group { display: grid; gap: 12px; min-width: 0; }
+.partner-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 26px; align-items: stretch; }
+.partner-group { display: grid; grid-template-rows: auto 1fr; gap: 12px; min-width: 0; }
 .partner-group-label {
   font-size: .68rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
   color: var(--blue); display: block;
 }
-.partner-logos { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-.partner-logos img { max-height: 46px; max-width: 130px; width: auto; height: auto; object-fit: contain; opacity: .92; transition: .2s; }
+.partner-logos { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.partner-logos img { max-height: 40px; max-width: 118px; width: auto; height: auto; object-fit: contain; opacity: .92; transition: .2s; }
 .partner-logos img:hover { opacity: 1; transform: scale(1.04); }
 /* Marcas todavía sin logo oficial: se muestran como wordmark de texto. */
 .partner-name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--navy); }
@@ -285,7 +285,7 @@ p { margin: 0 0 14px; }
 .team-panel p { max-width: 330px; font-size: 1rem; }
 .team-panel h2 { color: #fff; }
 .team-panel p { color: rgba(255,255,255,.72); }
-.team-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.team-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .team-mini {
   background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
   border-radius: 14px; padding: 0 0 16px; text-align: left;
@@ -561,7 +561,7 @@ th { color: #5d6a7d; font-size: .82rem; text-transform: uppercase; letter-spacin
   .partner-inner { justify-content: center; padding: 22px; }
   .partner-groups { flex: 1 1 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 22px; }
   .partner-intro { flex: 1 1 100%; max-width: none; }
-  .partner-columns { gap: 22px 28px; }
+  .partner-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 24px; }
   .cta-banner { padding: 34px; min-height: 0; }
   .cta-content br, .team-panel p br, .hero-casos h1 br, .form-note br { display: none; }
   .cta-visual { display: none; }
@@ -576,7 +576,7 @@ th { color: #5d6a7d; font-size: .82rem; text-transform: uppercase; letter-spacin
   .team-strip { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .hero-badges { gap: 16px; }
-  .partner-columns { flex-direction: column; }
+  .partner-columns { grid-template-columns: 1fr; }
   /* En móvil el flotante se reduce para no tapar el contenido. */
   .quote-fab { right: 14px; bottom: 14px; padding: 12px 16px; font-size: .85rem; }
   .quote-fab span { display: none; }

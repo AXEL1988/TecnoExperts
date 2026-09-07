@@ -289,14 +289,10 @@ const fillTeam = db.prepare(`
 `);
 for (const [name, photo, cert] of teamAssets) fillTeam.run(photo, cert, name);
 
-// Revisión del cliente: entra Daniel Arroyo (marketing) y sale Christian Baeza.
-db.prepare(`
-  INSERT INTO team_members (name, role, description, certification_logo, display_order)
-  SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM team_members WHERE name = ?)
-`).run('Daniel Arroyo', 'Marketing',
-       'Comunicación y gestión de marca. Acerca las soluciones de Tecno Experts a las empresas que las necesitan.',
-       'users', 3, 'Daniel Arroyo');
-db.prepare(`UPDATE team_members SET is_active = 0 WHERE name = ? AND is_active = 1`).run('Christian Baeza');
+// Revisión del cliente: sale Christian Baeza. Daniel Arroyo se retira del sitio;
+// la sección de equipo queda con Francisco, Fabián e Irene.
+db.prepare(`UPDATE team_members SET is_active = 0 WHERE name IN (?, ?) AND is_active = 1`)
+  .run('Christian Baeza', 'Daniel Arroyo');
 db.prepare(`UPDATE team_members SET display_order = 4 WHERE name = ? AND display_order = 3`).run('Irene Sarabia');
 
 // «Maestro» pasa a «Especialista» y se declara la certificación de cada quien.
@@ -327,9 +323,11 @@ const fillCaseIcon = db.prepare(`UPDATE success_cases SET icon_name = COALESCE(N
 for (const [sector, icon] of caseIcons) fillCaseIcon.run(icon, sector);
 
 const seedStats: Array<[string, string, string, number]> = [
-  ['200+', 'Proyectos de infraestructura implementados', 'users', 1],
-  ['90+', 'Empresas confían en nuestras soluciones', 'building', 2],
-  ['99.90%', 'Disponibilidad operativa garantizada', 'clock', 3]
+  ['10+', 'Años protegiendo empresas en Ecuador', 'shield-check', 1],
+  ['200+', 'Proyectos de seguridad implementados', 'users', 2],
+  ['30+', 'Certificaciones y alianzas tecnológicas', 'medal', 3],
+  ['90+', 'Empresas confían en nuestras soluciones', 'building', 4],
+  ['99.90%', 'Disponibilidad promedio en nuestros proyectos', 'clock', 5]
 ];
 if (db.prepare('SELECT COUNT(*) as count FROM stats').get().count === 0) {
   const insert = db.prepare(`INSERT INTO stats (value, label, icon_name, display_order) VALUES (?, ?, ?, ?)`);
@@ -337,22 +335,24 @@ if (db.prepare('SELECT COUNT(*) as count FROM stats').get().count === 0) {
   tx(seedStats);
 }
 
-// Revisión del cliente: la barra baja a tres cifras y cambia sus etiquetas.
-const statFixes: Array<[string, string, string, string, string, number]> = [
-  ['200+', 'Proyectos de seguridad implementados', '200+', 'Proyectos de infraestructura implementados', 'users', 1],
-  ['50+', 'Empresas confían en nuestras soluciones', '90+', 'Empresas confían en nuestras soluciones', 'building', 2],
-  ['99.99%', 'Disponibilidad promedio en nuestros proyectos', '99.90%', 'Disponibilidad operativa garantizada', 'clock', 3]
-];
-const corregirStat = db.prepare(`
-  UPDATE stats SET value = ?, label = ?, icon_name = ?, display_order = ?
-  WHERE value = ? AND label = ?
+// La barra de cifras vuelve a las cinco de la maqueta; solo se corrigen los dos
+// valores que el cliente observó: 50+ pasa a 90+ y 99.99% a 99.90%.
+const reactivarStat = db.prepare(`UPDATE stats SET is_active = 1 WHERE label = ? AND is_active = 0`);
+const alinearStat = db.prepare(`UPDATE stats SET value = ?, icon_name = ?, display_order = ? WHERE label = ?`);
+const crearStat = db.prepare(`
+  INSERT INTO stats (value, label, icon_name, display_order)
+  SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM stats WHERE label = ?)
 `);
-for (const [valorAnterior, etiquetaAnterior, valor, etiqueta, icono, orden] of statFixes) {
-  corregirStat.run(valor, etiqueta, icono, orden, valorAnterior, etiquetaAnterior);
+// Etiquetas que quedaron reescritas en la iteración anterior: se recuperan antes
+// de alinear la barra para no duplicar filas.
+const renombrarStat = db.prepare(`UPDATE stats SET label = ? WHERE label = ?`);
+renombrarStat.run('Proyectos de seguridad implementados', 'Proyectos de infraestructura implementados');
+renombrarStat.run('Disponibilidad promedio en nuestros proyectos', 'Disponibilidad operativa garantizada');
+for (const [value, label, icon, order] of seedStats) {
+  crearStat.run(value, label, icon, order, label);
+  alinearStat.run(value, icon, order, label);
+  reactivarStat.run(label);
 }
-const retirarStat = db.prepare(`UPDATE stats SET is_active = 0 WHERE value = ? AND label = ? AND is_active = 1`);
-retirarStat.run('10+', 'Años protegiendo empresas en Ecuador');
-retirarStat.run('30+', 'Certificaciones y alianzas tecnológicas');
 
 const seedResources: Array<[string, string, string, string, number]> = [
   ['Casos de Éxito', '/casos', 'Resultados medibles en clientes reales.', 'medal', 1],
@@ -449,10 +449,12 @@ const ordenPartners: Array<[string, number]> = [
 const fijarOrden = db.prepare(`UPDATE partners SET display_order = ? WHERE name = ? AND display_order <> ?`);
 for (const [nombre, orden] of ordenPartners) fijarOrden.run(orden, nombre, orden);
 
-// Proxmox, Microsoft y Dell todavía no tienen logo oficial: se muestran como texto.
 const partnerAssets: Array<[string, string]> = [
   ['VMware', '/img/partners/vmware.png'],
-  ['Veeam', '/img/partners/veeam.png']
+  ['Proxmox', '/img/partners/proxmox.png'],
+  ['Veeam', '/img/partners/veeam.png'],
+  ['Microsoft', '/img/partners/microsoft.png'],
+  ['Dell', '/img/partners/dell.png']
 ];
 const fillPartner = db.prepare(`UPDATE partners SET image_url = COALESCE(NULLIF(image_url, ''), ?) WHERE name = ?`);
 for (const [name, image] of partnerAssets) fillPartner.run(image, name);

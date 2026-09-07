@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import { getServices, getSetting } from '../lib/db';
+import { getServices } from '../lib/db';
 const services = getServices();
-const whatsapp = getSetting('whatsapp_url');
 ---
 <BaseLayout title="Soluciones | Tecno Experts"
             description="Soluciones técnicas B2B para evitar el downtime y proteger tu operación.">
@@ -37,9 +36,6 @@ const whatsapp = getSetting('whatsapp_url');
               <div class="rule"></div>
               <span class="label">Beneficio:</span>
               <p>{service.short_description}</p>
-              <a class="btn btn-primary solution-cta" href={service.cta_url}>
-                {service.cta_text} <Icon name="arrow-right" size={16} stroke={2} />
-              </a>
             </div>
             {service.image_url && (
               <figure class="solution-figure">
@@ -58,14 +54,6 @@ const whatsapp = getSetting('whatsapp_url');
         <div class="cta-content">
           <h2>¿No sabes por dónde empezar?</h2>
           <p>Te guiamos y diseñamos la solución ideal para tu empresa en una consultoría gratuita.</p>
-          <div class="cta-actions">
-            <a class="btn btn-primary" href="/contacto">
-              Agendar Diagnóstico <Icon name="arrow-right" size={16} stroke={2} />
-            </a>
-            <a class="btn btn-outline" href={whatsapp} target="_blank" rel="noreferrer">
-              <Icon name="whatsapp" size={18} /> Hablar por WhatsApp
-            </a>
-          </div>
         </div>
         <div class="cta-visual">
           <img src="/img/hero/seguridad-banner.webp" alt="" width="800" height="366" loading="lazy" />

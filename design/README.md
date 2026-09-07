@@ -50,7 +50,7 @@ punto del texto `hero_title`.
 | IMG_6933 | `hero/datacenter-pasillo.webp` | Hero de Soluciones y de Casos |
 | IMG_6885 | `hero/seguridad-banner.webp` | Ilustración de los banners CTA oscuros |
 | IMG_6928 | `equipo/equipo-tecno-experts.webp` | Hero de Nosotros |
-| IMG_6928 (recortes) | `equipo/{francisco-silva,fabian-quimbiulco,christian-baeza,irene-sarabia}.webp` | Tarjetas de equipo y hero de Contacto |
+| Retratos individuales | `equipo/{francisco-silva,fabian-quimbiulco,irene-sarabia}.webp` | Tarjetas de equipo y hero de Contacto |
 | IMG_6935 / IMG_6936 | `servicios/virtualizacion-vmware.webp` / `icon-…` | Servicio VMware: imagen y tile de marca |
 | IMG_6937 / IMG_6938 | `servicios/backup-recuperacion-veeam.webp` / `icon-…` | Servicio Veeam |
 | IMG_6939 / IMG_6940 | `servicios/hardware-hp-lenovo.webp` / `icon-…` | Servicio Hardware |

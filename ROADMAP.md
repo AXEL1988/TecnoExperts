@@ -42,7 +42,6 @@
   `/admin/partners` o en las semillas de `src/lib/db.ts`.
 - Reemplazar las **imágenes generadas con IA** por fotografía real en `public/img/hero/`,
   `public/img/servicios/` y `public/img/casos/`.
-- Foto de **Daniel Arroyo** para `public/img/equipo/`.
 
 ## Fase 6
 - Reemplazar el logo SVG por el vectorial oficial de marca.
