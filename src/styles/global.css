@@ -113,6 +113,7 @@ p { margin: 0 0 14px; }
 }
 .nav-wrap { display: flex; align-items: center; gap: 30px; min-height: 84px; }
 .brand { display: inline-flex; align-items: center; flex: none; }
+.logo { display: block; height: 56px; width: auto; }
 .main-nav { display: flex; align-items: center; gap: 26px; margin-left: auto; font-size: 1rem; }
 .main-nav > a {
   position: relative; color: #45566E; font-weight: 500; padding: 6px 0;
@@ -572,6 +573,7 @@ th { color: #5d6a7d; font-size: .82rem; text-transform: uppercase; letter-spacin
 }
 
 @media (max-width: 620px) {
+  .logo { height: 44px; }
   .stats-bar { grid-template-columns: 1fr; }
   .team-strip { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }

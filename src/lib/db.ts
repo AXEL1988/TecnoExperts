@@ -478,9 +478,28 @@ partnerCategories.forEach(([name, category], index) => {
 });
 
 // Marcas retiradas del sitio: se desactivan en vez de borrarse, para no perder ediciones.
-const partnersRetirados = ['HP', 'Lenovo', 'Telefónica', 'Claro', 'ISO 27001'];
+const partnersRetirados = ['HP', 'Telefónica', 'Claro', 'ISO 27001'];
 const desactivarPartner = db.prepare(`UPDATE partners SET is_active = 0 WHERE name = ? AND is_active = 1`);
 for (const name of partnersRetirados) desactivarPartner.run(name);
+
+// Revisión del cliente (sep. 2026): Lenovo entra a la barra de confianza junto a Microsoft y Dell.
+nuevoPartner.run('Lenovo', 6, 'Infraestructura, Nube y Soporte', 'Lenovo');
+db.prepare(`
+  UPDATE partners SET is_active = 1, category = 'Infraestructura, Nube y Soporte',
+         image_url = COALESCE(NULLIF(image_url, ''), '/img/partners/lenovo.png')
+  WHERE name = 'Lenovo' AND (is_active = 0 OR category IS NULL OR category <> 'Infraestructura, Nube y Soporte' OR image_url IS NULL)
+`).run();
+
+// Revisión del cliente (sep. 2026): la especialidad de hardware suma a Dell.
+const conDell: Array<[string, string, string]> = [
+  ['title', 'Hardware HP y Lenovo', 'Hardware HP, Lenovo y Dell'],
+  ['home_description', 'Equipamiento HP y Lenovo integrado y con soporte experto directo.',
+   'Equipamiento HP, Lenovo y Dell integrado y con soporte experto directo.'],
+  ['icon_url', '/img/servicios/icon-hardware-hp-lenovo.webp', '/img/servicios/icon-hardware-hp-lenovo-dell.webp']
+];
+for (const [columna, anterior, nuevo] of conDell) {
+  db.prepare(`UPDATE services SET ${columna} = ? WHERE slug = 'hardware-hp-lenovo' AND ${columna} = ?`).run(nuevo, anterior);
+}
 
 const settings = {
   hero_title: 'Infraestructura que no falla. Equipo que no abandona.',

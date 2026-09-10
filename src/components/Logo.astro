@@ -1,23 +1,6 @@
 ---
-/* Isologo de Tecno Experts. Reemplazar por el vectorial oficial cuando esté disponible. */
-const { variant = 'dark' } = Astro.props;
-const word = variant === 'light' ? '#FFFFFF' : '#0F2445';
-const tag = variant === 'light' ? 'rgba(255,255,255,.7)' : '#1668E3';
-const dot = '#1668E3';
-const dots = [
-  [3.5, 15.5, 2.6], [11, 9.5, 2.2], [10, 20.5, 1.9], [18.5, 5.5, 2.4],
-  [19, 15, 2.1], [17, 24.5, 1.7], [27, 2.5, 2.1], [26.5, 11, 2.5],
-  [25, 20, 1.8], [33.5, 7, 1.7], [34, 16.5, 1.5], [31, 25.5, 1.3],
-  [40, 12, 1.4], [39, 21, 1.1], [6, 25, 1.4], [13.5, 3, 1.5]
-];
+/* Logo oficial de Tecno Experts (public/img/logo.png, recortado de logo.jpeg con fondo transparente). */
+const { height = 56 } = Astro.props;
 ---
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208 52" width="200" height="50"
-     role="img" aria-label="Tecno Experts, especialistas en TI">
-  <text x="0" y="26" font-family="Poppins, sans-serif" font-size="22" font-weight="700"
-        font-style="italic" fill={word} letter-spacing="-.3">Tecno Experts</text>
-  <text x="1" y="41" font-family="Inter, sans-serif" font-size="8.4" font-weight="500"
-        fill={tag} letter-spacing=".5">Especialistas en TI</text>
-  <g transform="translate(160, 6)" fill={dot}>
-    {dots.map(([cx, cy, r]) => <circle cx={cx} cy={cy} r={r} />)}
-  </g>
-</svg>
+<img class="logo" src="/img/logo.png" alt="Tecno Experts, especialistas de IT"
+     height={height} width={Math.round(height * 1090 / 435)} decoding="async" />
