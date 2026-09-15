@@ -193,6 +193,12 @@ p { margin: 0 0 14px; }
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,.96) 10%, rgba(255,255,255,.55) 20%, rgba(255,255,255,0) 33%);
 }
+/* En Nosotros el logo de la pared está en el borde superior de la foto: el encuadre sube para no cortarlo. */
+.hero-nosotros .hero-media img { object-position: center 6%; }
+/* La primera persona queda pegada al borde izquierdo de la foto: el fundido se acorta para no taparla. */
+.hero-nosotros .hero-media::after {
+  background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,.7) 4%, rgba(255,255,255,0) 11%);
+}
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
 .hero-marks { display: flex; align-items: center; gap: 8px; margin-top: 34px; }
 .hero-marks span { width: 26px; height: 4px; border-radius: 4px; background: var(--blue); }
