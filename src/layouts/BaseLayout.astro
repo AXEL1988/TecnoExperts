@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Icon from '../components/Icon.astro';
 import Logo from '../components/Logo.astro';
 import { getNavResources, getServices, getSetting } from '../lib/db';
+import CookieBanner from '../components/CookieBanner.astro';
 
 const {
   title = 'Tecno Experts',
@@ -171,5 +172,7 @@ const whatsapp = getSetting('whatsapp_url');
       document.querySelectorAll('.nav-menu').forEach((menu) =>
         menu.addEventListener('click', (event) => event.stopPropagation()));
     </script>
+<!-- Componente de cookies integrado globalmente -->
+    <CookieBanner />
   </body>
 </html>
