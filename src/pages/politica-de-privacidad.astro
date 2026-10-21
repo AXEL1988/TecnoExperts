@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getSetting } from '../lib/db';
+
+const companyEmail = 'isarabia@tecno-experts.com';
+const companyName = 'Tecno Experts';
+---
+
+<BaseLayout 
+  title={`Política de Privacidad | ${companyName}`} 
+  description="Cómo Tecno Experts recopila, usa y protege tus datos personales."
+>
+  <section class="section">
+    <div class="container" style="max-w: 800px; margin: 0 auto; padding-top: 2rem; padding-bottom: 4rem;">
+      
+      <!-- Botón de retorno al formulario de contacto -->
+      <div style="margin-bottom: 2rem; display: flex; justify-content: flex-start;">
+        <a href="/contacto" class="btn btn-outline" style="gap: 8px; font-size: 0.9rem;">
+          <Icon name="arrow-right" size={16} stroke={2} style="transform: rotate(180deg);" />
+          Regresar al formulario de contacto
+        </a>
+      </div>
+
+      <!-- Contenedor estilo tarjeta centrado -->
+      <div class="card" style="padding: 2.5rem; text-align: left;">
+        
+        <!-- Encabezado de la Política -->
+        <div style="text-align: center; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color, #e2e8f0); padding-bottom: 1.5rem;">
+          <div class="icon-tile icon-tile-solid" style="margin: 0 auto 1rem auto; width: 48px; height: 48px;">
+            <Icon name="shield-check" size={28} />
+          </div>
+          <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Política de Privacidad</h1>
+          <p style="color: var(--text-muted, #64748b); font-size: 0.95rem;">
+            Cómo {companyName} recopila, usa y protege tus datos personales.
+          </p>
+          <span style="display: block; margin-top: 0.5rem; font-size: 0.8rem; color: #94a3b8;">
+            Última actualización: Octubre 2026
+          </span>
+        </div>
+
+        <!-- Contenido detallado -->
+        <div class="legal-content" style="display: flex; flex-direction: column; gap: 1.75rem; line-height: 1.6; font-size: 0.95rem;">
+          
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              1. Responsable del tratamiento
+            </h3>
+            <p>
+              El responsable del tratamiento de tus datos personales es <strong>{companyName}</strong>, con domicilio en Quito, Ecuador. Puedes escribirnos a 
+              <a href={`mailto:${companyEmail}`} style="color: var(--color-primary, #0066cc); font-weight: 500;">{companyEmail}</a>.
+            </p>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              2. Datos que recopilamos
+            </h3>
+            <p>Recopilamos únicamente los datos que nos entregas voluntariamente a través del formulario de contacto en nuestro sitio web:</p>
+            <ul style="list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem;">
+              <li>Nombre completo.</li>
+              <li>Correo electrónico corporativo.</li>
+              <li>Nombre de la empresa.</li>
+              <li>Área de interés.</li>
+              <li>El mensaje o descripción de tu proyecto.</li>
+            </ul>
+            <div style="background-color: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.85rem; color: var(--text-muted, #64748b);">
+              No solicitamos datos sensibles ni financieros en este sitio. Te pedimos no incluirlos en el campo de mensaje.
+            </div>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              3. Para qué usamos tus datos y flujo de envío
+            </h3>
+            <p>
+              Los datos proporcionados se transmiten de forma segura a través de nuestro sitio web hacia el correo institucional de atención (<strong>{companyEmail}</strong>). Los utilizamos exclusivamente para:
+            </p>
+            <ul style="list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem;">
+              <li>Responder a tu solicitud y coordinar una conversación o propuesta técnica.</li>
+              <li>Establecer contacto directo por correo electrónico o teléfono/WhatsApp según tu requerimiento.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              4. Base legal
+            </h3>
+            <p>
+              Tratamos tus datos con tu consentimiento, el cual otorgas al marcar la casilla de aceptación de la política de privacidad en el formulario. Puedes retirar dicho consentimiento en cualquier momento.
+            </p>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              5. Con quién compartimos tus datos
+            </h3>
+            <p>
+              No comercializamos ni alquilamos tus datos a terceros. Únicamente intervienen los proveedores tecnológicos que hacen posible el funcionamiento seguro de nuestro alojamiento web y plataforma de correo.
+            </p>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              6. Cuánto tiempo los conservamos
+            </h3>
+            <p>
+              Conservamos tus datos durante el tiempo estrictamente necesario para atender tu solicitud, gestionar la relación comercial y cumplir con las obligaciones legales aplicables.
+            </p>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              7. Tus derechos
+            </h3>
+            <p>
+              Puedes ejercer tus derechos de acceso, rectificación, actualización, eliminación u oposición escribiendo a 
+              <a href={`mailto:${companyEmail}`} style="color: var(--color-primary, #0066cc); font-weight: 500;">{companyEmail}</a> 
+              indicando tu nombre y el derecho que deseas ejercer, conforme a la normativa vigente en Ecuador.
+            </p>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              8. Seguridad
+            </h3>
+            <p>
+              Aplicamos medidas técnicas y organizativas razonables para proteger tus datos frente a accesos no autorizados, pérdida o alteración.
+            </p>
+          </section>
+
+          <section>
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading, #0f172a);">
+              9. Cambios en esta política
+            </h3>
+            <p>
+              Podemos actualizar esta política ocasionalmente. La versión vigente siempre estará publicada en esta sección.
+            </p>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

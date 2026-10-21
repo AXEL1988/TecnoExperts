@@ -81,7 +81,18 @@ const marketing = team.find((person) => person.role.toLowerCase().includes('mark
             <textarea id="message" name="message" placeholder="Cuéntanos cómo podemos ayudarte..." required></textarea>
           </div>
         </div>
-        <button class="btn btn-primary btn-block btn-lg" type="submit" style="margin-top:24px;">
+
+        <!-- Checkbox de Políticas de Privacidad integrado -->
+        <div class="field field-checkbox" style="margin-top: 18px;">
+          <label style="display: flex; align-items: flex-start; gap: 8px; font-weight: normal; cursor: pointer; font-size: 0.85rem; color: var(--color-text-muted, #555);">
+            <input type="checkbox" id="accept_policy" name="accept_policy" required style="margin-top: 3px; cursor: pointer;" />
+            <span>
+              He leído y acepto la <a href="/politica-de-privacidad" target="_blank" style="color: var(--color-primary, #f59e0b); text-decoration: underline;">Política de privacidad</a> y autorizo el uso de mis datos para contactarme sobre mi solicitud.
+            </span>
+          </label>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg" type="submit" style="margin-top:20px;">
           Enviar Solicitud <Icon name="arrow-right" size={17} stroke={2} />
         </button>
         <p class="form-note">
